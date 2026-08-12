@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso - Crear Perfil NFC</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .login-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 40px 32px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .login-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+        }
+        p {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+        .input-field {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 16px;
+            color: #111827;
+            background: #ffffff;
+            margin-bottom: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            font-family: inherit;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #1a1a2e;
+            box-shadow: 0 0 0 3px rgba(26, 26, 46, 0.08);
+        }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: #1a1a2e;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .btn:hover {
+            box-shadow: 0 4px 12px rgba(26, 26, 46, 0.3);
+        }
+        .btn:active {
+            transform: scale(0.98);
+        }
+        .error-msg {
+            background: #fef2f2;
+            border: 1.5px solid #fecaca;
+            border-radius: 8px;
+            padding: 12px;
+            color: #dc2626;
+            font-size: 14px;
+            margin-bottom: 16px;
+            display: none;
+        }
+        .hint {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #9ca3af;
+        }
+        .hint code {
+            background: #f3f4f6;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'SF Mono', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <div class="login-icon">🔐</div>
+        <h1>Acceso Restringido</h1>
+        <p>Solo administradores pueden crear nuevos perfiles NFC</p>
+
+        <div id="error-box" class="error-msg">Contrasena incorrecta</div>
+
+        <input type="password" id="master-pass" class="input-field" placeholder="Contrasena maestra">
+        <button onclick="login()" class="btn">Acceder</button>
+
+        <p class="hint">Contrasena por defecto: <code>nfc-admin-2024</code></p>
+    </div>
+
+    <script>
+        function login() {
+            const pass = document.getElementById('master-pass').value;
+            if (!pass) {
+                document.getElementById('error-box').style.display = 'block';
+                return;
+            }
+            // Redirigir con el token en la URL
+            window.location.href = '/create?token=' + encodeURIComponent(pass);
+        }
+
+        document.getElementById('master-pass').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') login();
+        });
+    </script>
+</body>
+</html>

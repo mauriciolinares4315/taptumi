@@ -1,0 +1,357 @@
+/* ============================================================
+   NFC DIGITAL PROFILE - Estilos Admin Panel
+   ============================================================ */
+
+.admin-container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 24px 20px 40px;
+    min-height: 100vh;
+}
+
+/* Login */
+.login-section {
+    text-align: center;
+    padding-top: 60px;
+}
+
+.login-section h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.login-subtitle {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-bottom: 32px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 320px;
+    margin: 0 auto;
+}
+
+.login-hint {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 16px;
+}
+
+.login-hint code {
+    background: var(--surface);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'SF Mono', Monaco, monospace;
+    font-size: 12px;
+}
+
+.error-msg {
+    color: #ef4444;
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+/* Edit section */
+.edit-section {
+    animation: fadeIn 0.3s ease;
+}
+
+.edit-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.edit-header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* Tarjetas de formulario */
+.form-card {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+}
+
+.form-card-title {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    margin: 0 0 16px;
+    font-weight: 600;
+}
+
+/* Grupos de formulario */
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    color: var(--text-primary);
+    background: #ffffff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    font-family: inherit;
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(26, 26, 46, 0.08);
+}
+
+.input-field::placeholder {
+    color: var(--text-muted);
+}
+
+.textarea {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.6;
+}
+
+.input-hint {
+    display: block;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+/* Botones admin */
+.btn-primary {
+    background: var(--primary);
+    color: #ffffff;
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.btn-primary:hover {
+    box-shadow: 0 4px 12px rgba(26, 26, 46, 0.25);
+}
+
+.btn-preview {
+    background: transparent;
+    color: var(--primary);
+    border: 1.5px solid var(--primary);
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.15s;
+}
+
+.btn-preview:hover {
+    background: rgba(26, 26, 46, 0.05);
+}
+
+.btn-add {
+    background: transparent;
+    color: var(--primary);
+    border: 1.5px dashed var(--border);
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 14px;
+    width: 100%;
+    margin-top: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.btn-add:hover {
+    border-color: var(--primary);
+    background: rgba(26, 26, 46, 0.02);
+}
+
+.btn-remove {
+    background: #fef2f2;
+    color: #ef4444;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s;
+}
+
+.btn-remove:hover {
+    background: #fee2e2;
+}
+
+.btn-save {
+    flex: 1;
+    background: var(--primary);
+    color: #ffffff;
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.btn-save:hover {
+    box-shadow: 0 4px 12px rgba(26, 26, 46, 0.25);
+}
+
+.btn-cancel {
+    flex: 1;
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1.5px solid var(--border);
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+    text-align: center;
+    transition: background 0.15s;
+}
+
+.btn-cancel:hover {
+    background: var(--surface);
+}
+
+/* Filas de links sociales */
+.social-link-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.social-link-row .input-field {
+    font-size: 14px;
+    padding: 10px 12px;
+}
+
+.social-link-row .social-platform {
+    flex: 0 0 30%;
+}
+
+.social-link-row .social-url {
+    flex: 1;
+}
+
+.social-link-row .social-label {
+    flex: 0 0 25%;
+}
+
+/* Acciones del formulario */
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.save-msg {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    background: #f0fdf4;
+}
+
+/* Estadisticas */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.stat-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    text-align: center;
+}
+
+.stat-number {
+    display: block;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .admin-container {
+        padding: 16px;
+    }
+
+    .edit-header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .social-link-row {
+        flex-wrap: wrap;
+    }
+
+    .social-link-row .social-platform,
+    .social-link-row .social-url,
+    .social-link-row .social-label {
+        flex: 1 1 100%;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
