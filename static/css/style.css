@@ -306,6 +306,13 @@ body {
     opacity: 0.6;
     transition: opacity 0.2s;
 }
+.admin-hint p {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-decoration: none;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
 
 .admin-hint a:hover {
     opacity: 1;

@@ -48,7 +48,7 @@
                 <button onclick="login()" class="btn btn-primary">Acceder</button>
                 <p id="login-error" class="error-msg" style="display:none;">Contraseña incorrecta</p>
             </div>
-            <p class="login-hint">Contraseña por defecto: <code>admin123</code></p>
+            <p class="admin-hint"> © <span class="taptumi-year"></span> Taptumi  Todos los derechos reservados.<br> Bucaramanga. Colombia.</p>
         </div>
 
         <!-- Panel de edicion -->
@@ -161,15 +161,14 @@
 
             <p id="save-msg" class="save-msg" style="display:none;"></p>
         </div>
+         <p class="admin-hint"> © <span class="taptumi-year"></span> Taptumi  Todos los derechos reservados.<br> Bucaramanga. Colombia.</p>
+    
     </div>
-    <div>
-     <p class="hint"> © <span class="taptumi-year"></span> Taptumi  Todos los derechos reservados.<br> Bucaramanga. Colombia.</p>
-    </div>
-        <script>
+    <script>
          document.querySelectorAll('.taptumi-year').forEach(el => {
          el.textContent = new Date().getFullYear();
         });
-        </script>
+    </script>
 
     <script>
         const SLUG = "{{ slug }}";
