@@ -6,6 +6,9 @@ import uuid
 import re
 from datetime import datetime
 from werkzeug.utils import secure_filename
+import requests
+from dotenv import load_dotenv
+load_dotenv()
 
 # Cloudinary para almacenamiento de imagenes en la nube
 try:
@@ -26,7 +29,9 @@ if CLOUDINARY_AVAILABLE:
     )
 
 app = Flask(__name__)
-app.secret_key = os.environ.get('SECRET_KEY', 'tu-clave-secreta-cambia-esto')
+app.secret_key = os.environ.get('SECRET_KEY')
+if not app.secret_key:
+    raise ValueError("❌ SECRET_KEY no está configurada. Revisa tu archivo .env")
 CORS(app)
 
 # Configuracion
@@ -36,8 +41,9 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max
 
 # Contrasena maestra para crear perfiles (cambiala en produccion)
-MASTER_PASSWORD = os.environ.get('MASTER_PASSWORD', 'nfc-admin-2024')
-
+MASTER_PASSWORD = os.environ.get('MASTER_PASSWORD')
+if not MASTER_PASSWORD:
+    raise ValueError("❌ MASTER_PASSWORD no está configurada. Revisa tu archivo .env")
 # ============================================================
 # BASE DE DATOS (Turso con fallback a SQLite local)
 # ============================================================
@@ -46,16 +52,118 @@ TURSO_DATABASE_URL = os.environ.get('TURSO_DATABASE_URL', '')
 TURSO_AUTH_TOKEN = os.environ.get('TURSO_AUTH_TOKEN', '')
 USE_TURSO = bool(TURSO_DATABASE_URL and TURSO_AUTH_TOKEN)
 
+def extract_turso_value(cell):
+    """Extrae el valor Python nativo de una celda tipada de Turso"""
+    if cell is None:
+        return None
+    if isinstance(cell, dict):
+        t = cell.get("type")
+        v = cell.get("value")
+        if t == "null":
+            return None
+        elif t == "integer":
+            return int(v)
+        elif t == "float":
+            return float(v)
+        elif t == "blob":
+            import base64
+            return base64.b64decode(v)
+        else:  # text
+            return v
+    return cell
+
+
+class TursoRow:
+    """Emula sqlite3.Row para que funcione dict(row) y row[0]"""
+    def __init__(self, columns, values):
+        self._columns = columns
+        # Extraer valores reales de los dicts tipados de Turso
+        self._values = [extract_turso_value(v) for v in values]
+    
+    def __getitem__(self, key):
+        if isinstance(key, int):
+            return self._values[key]
+        if key in self._columns:
+            return self._values[self._columns.index(key)]
+        raise KeyError(key)
+    
+    def __iter__(self):
+        return iter(self._columns)
+    
+    def keys(self):
+        return self._columns
+
+
+class FakeCursor:
+    """Cursor falso para Turso HTTP"""
+    def __init__(self, rows=None, rowcount=0, lastrowid=0):
+        self.rows = rows or []
+        self.rowcount = rowcount
+        self.lastrowid = lastrowid
+
+def to_turso_args(values):
+    """Convierte valores Python al formato tipado de Turso v2 API"""
+    args = []
+    for v in values:
+        if v is None:
+            args.append({"type": "null"})
+        elif isinstance(v, bool):
+            args.append({"type": "integer", "value": str(int(v))})
+        elif isinstance(v, int):
+            args.append({"type": "integer", "value": str(v)})
+        elif isinstance(v, float):
+            args.append({"type": "float", "value": str(v)})
+        elif isinstance(v, bytes):
+            import base64
+            args.append({"type": "blob", "base64": base64.b64encode(v).decode()})
+        else:
+            args.append({"type": "text", "value": str(v)})
+    return args
 class DBConnection:
-    """Wrapper que maneja tanto Turso como SQLite de forma transparente"""
+    """Wrapper que maneja tanto Turso HTTP como SQLite de forma transparente"""
     def __init__(self, conn):
         self.conn = conn
-        self.is_turso = USE_TURSO and not isinstance(conn, sqlite3.Connection)
+        self.is_turso = USE_TURSO and isinstance(conn, str)
 
     def execute(self, query, params=()):
         """Ejecuta una query y devuelve un cursor/resultado"""
         if self.is_turso:
-            return self.conn.execute(query, params)
+            url = f"{self.conn}/v2/pipeline"
+            headers = {
+                "Authorization": f"Bearer {TURSO_AUTH_TOKEN}",
+                "Content-Type": "application/json"
+            }
+                        # Construir stmt: si hay params, incluir args; si no, omitirlo
+            stmt = {"sql": query}
+            if params:
+                stmt["args"] = to_turso_args(list(params))
+            
+            payload = {
+                "requests": [
+                    {"type": "execute", "stmt": stmt},
+                    {"type": "close"}
+                ]
+            }
+            try:
+                r = requests.post(url, headers=headers, json=payload, timeout=30)
+                
+                # Si hay error, mostrar el body para saber qué falló exactamente
+                if r.status_code >= 400:
+                    print(f"❌ Turso error {r.status_code}: {r.text[:300]}")
+                
+                r.raise_for_status()
+                data = r.json()
+                
+                result = data["results"][0]["response"]["result"]
+                cols = [c["name"] for c in result.get("cols", [])]
+                rows = [TursoRow(cols, row) for row in result.get("rows", [])]
+                rowcount = result.get("affected_row_count", 0)
+                lastrowid = result.get("last_insert_rowid", 0)
+                
+                return FakeCursor(rows=rows, rowcount=rowcount, lastrowid=lastrowid)
+            except Exception as e:
+                print(f"❌ Error en Turso HTTP: {e}")
+                raise
         else:
             return self.conn.execute(query, params)
 
@@ -80,22 +188,15 @@ class DBConnection:
             self.conn.commit()
 
     def close(self):
-        """Cierra la conexion"""
-        self.conn.close()
+        """Cierra la conexion (solo SQLite)"""
+        if not self.is_turso:
+            self.conn.close()
 
 def get_db():
-    """Obtiene conexion a Turso o SQLite local"""
+    """Obtiene conexion a Turso (HTTP) o SQLite local"""
     if USE_TURSO:
-        try:
-            import libsql_client
-            conn = libsql_client.create_client_sync(
-                url=TURSO_DATABASE_URL,
-                auth_token=TURSO_AUTH_TOKEN
-            )
-            return DBConnection(conn)
-        except Exception as e:
-            print(f"⚠️ Error conectando a Turso: {e}")
-            print("🔄 Fallback a SQLite local")
+        # Usar HTTP API directamente - evita el bug WebSocket de libsql_client
+        return DBConnection(TURSO_DATABASE_URL.replace("libsql://", "https://"))
 
     # Fallback: SQLite local
     conn = sqlite3.connect('profiles.db')

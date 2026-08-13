@@ -162,6 +162,14 @@
             <p id="save-msg" class="save-msg" style="display:none;"></p>
         </div>
     </div>
+    <div>
+     <p class="hint"> © <span class="taptumi-year"></span> Taptumi  Todos los derechos reservados.<br> Bucaramanga. Colombia.</p>
+    </div>
+        <script>
+         document.querySelectorAll('.taptumi-year').forEach(el => {
+         el.textContent = new Date().getFullYear();
+        });
+        </script>
 
     <script>
         const SLUG = "{{ slug }}";

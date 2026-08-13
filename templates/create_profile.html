@@ -288,6 +288,14 @@
             <a href="/" class="btn-secondary">Crear otro perfil</a>
         </div>
     </div>
+    <div>
+     <p class="hint"> © <span class="taptumi-year"></span> Taptumi  Todos los derechos reservados.<br> Bucaramanga. Colombia.</p>
+    </div>
+        <script>
+         document.querySelectorAll('.taptumi-year').forEach(el => {
+         el.textContent = new Date().getFullYear();
+        });
+        </script>
 
     <script>
         function updateSlugPreview() {
