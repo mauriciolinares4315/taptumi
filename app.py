@@ -44,6 +44,32 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max
 MASTER_PASSWORD = os.environ.get('MASTER_PASSWORD')
 if not MASTER_PASSWORD:
     raise ValueError("❌ MASTER_PASSWORD no está configurada. Revisa tu archivo .env")
+
+#============================================================
+# ICONOS DE REDES SOCIALES
+#============================================================
+SOCIAL_ICONS = {
+    'instagram': 'fab fa-instagram',
+    'facebook': 'fab fa-facebook-f',
+    'twitter': 'fab fa-x-twitter',
+    'x': 'fab fa-x-twitter',
+    'linkedin': 'fab fa-linkedin-in',
+    'tiktok': 'fab fa-tiktok',
+    'youtube': 'fab fa-youtube',
+    'whatsapp': 'fab fa-whatsapp',
+    'spotify': 'fab fa-spotify',
+    'github': 'fab fa-github',
+    'behance': 'fab fa-behance',
+    'dribbble': 'fab fa-dribbble',
+    'pinterest': 'fab fa-pinterest',
+    'telegram': 'fab fa-telegram',
+    'snapchat': 'fab fa-snapchat',
+    'globe': 'fas fa-globe',
+    'link': 'fas fa-link',
+    'envelope': 'fas fa-envelope',
+    'phone': 'fas fa-phone',
+    'default': 'fas fa-link'
+}    
 # ============================================================
 # BASE DE DATOS (Turso con fallback a SQLite local)
 # ============================================================
@@ -365,6 +391,22 @@ def api_get_profile(slug):
         SELECT platform, url, label, icon FROM social_links 
         WHERE profile_id = ? ORDER BY sort_order
     """, (profile[0],)))
+            # Agregar icono de Font Awesome a cada link
+    links_processed = []
+    for link in links:
+            link_dict = dict(link)
+            icon_key = link_dict.get('icon', 'default').lower().strip()
+            if icon_key not in SOCIAL_ICONS:
+                # Detectar por URL si no hay icono válido
+                url_lower = link_dict.get('url', '').lower()
+                for key in SOCIAL_ICONS:
+                    if key != 'default' and key in url_lower:
+                        icon_key = key
+                        break
+            link_dict['fa_icon'] = SOCIAL_ICONS.get(icon_key, SOCIAL_ICONS['default'])
+            links_processed.append(link_dict)
+
+    links = links_processed
 
     gallery = db.fetchall(db.execute("""
         SELECT image_url, caption FROM gallery 

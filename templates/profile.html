@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ profile.name }} - Perfil Digital</title>
     <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
     <div class="profile-container">
@@ -54,9 +55,11 @@
             <div class="social-links">
                 {% for link in links %}
                 <a href="{{ link.url }}" class="social-link" target="_blank">
-                    <span class="social-icon">{{ link.platform[0] }}</span>
+                    <i class="{{ link.fa_icon }} social-icon"></i>
                     <span class="social-label">{{ link.label or link.platform }}</span>
-                    <svg class="social-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+                    <svg class="social-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M7 17L17 7M17 7H7M17 7v10"/>
+                    </svg>
                 </a>
                 {% endfor %}
             </div>
@@ -64,24 +67,12 @@
         {% endif %}
 
         <!-- Galeria -->
-        {% if gallery %}
-        <div class="gallery-section">
-            <h3 class="section-title">Galeria</h3>
-            <div class="gallery-grid">
-                {% for img in gallery[:4] %}
-                <div class="gallery-item">
-                    <img src="{{ img.image_url }}" alt="{{ img.caption or 'Imagen' }}">
-                </div>
-                {% endfor %}
+         {% if gallery and gallery|length > 0 %}
+            <div class="gallery-section">
+             <h3 class="section-title">Galeria</h3>
+                {% include 'gallery_carousel.html' %}
             </div>
-            {% if gallery|length > 4 %}
-            <p style="text-align: center; font-size: 13px; color: var(--text-muted); margin-top: 10px;">
-                +{{ gallery|length - 4 }} imagenes mas en el perfil completo
-            </p>
-            {% endif %}
-        </div>
         {% endif %}
-
         <!-- Guardar contacto -->
         <button class="btn-save-contact" onclick="downloadVCard()">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -110,29 +101,41 @@
 
     <script>
         function downloadVCard() {
-            const name = "{{ profile.name }}";
-            const phone = "{{ profile.phone }}";
-            const email = "{{ profile.email }}";
-            const company = "{{ profile.company }}";
+    const name = "{{ profile.name }}";
+    const phone = "{{ profile.phone }}";
+    const email = "{{ profile.email }}";
+    const company = "{{ profile.company }}";
+    const role = "{{ profile.role }}";
+    const url = window.location.href;
 
-            const vcard = `BEGIN:VCARD
-VERSION:3.0
-FN:${name}
-TEL:${phone}
-EMAIL:${email}
-ORG:${company}
-END:VCARD`;
+    const nameParts = name.trim().split(' ');
+    const firstName = nameParts[0] || '';
+    const lastName = nameParts.slice(1).join(' ') || '';
 
-            const blob = new Blob([vcard], { type: 'text/vcard' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `${name.replace(/\s+/g, '_')}.vcf`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
+    const vcard = [
+        'BEGIN:VCARD',
+        'VERSION:3.0',
+        `N:${lastName};${firstName};;;`,
+        `FN:${name}`,
+        `ORG:${company}`,
+        role ? `TITLE:${role}` : '',
+        phone ? `TEL;TYPE=CELL:${phone}` : '',
+        email ? `EMAIL;TYPE=WORK:${email}` : '',
+        `URL:${url}`,
+        'END:VCARD'
+    ].filter(Boolean).join('\r\n');
+
+    // text/x-vcard para máxima compatibilidad Android + iPhone
+    const blob = new Blob([vcard], { type: 'text/x-vcard;charset=utf-8' });
+    const urlBlob = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = urlBlob;
+    a.download = `${name.replace(/\s+/g, '_')}.vcf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(urlBlob);
+}
     </script>
 </body>
 </html>
