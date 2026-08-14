@@ -354,7 +354,7 @@ def public_profile(slug):
     """, (profile[0],)))
            # Agregar icono de Font Awesome a cada link
     links_processed = []
-    for link in raw_links:
+    for link in links:
         link_dict = dict(link)
         url_lower = link_dict.get('url', '').lower()
         
