@@ -354,18 +354,25 @@ def public_profile(slug):
     """, (profile[0],)))
            # Agregar icono de Font Awesome a cada link
     links_processed = []
-    for link in links:
-            link_dict = dict(link)
-            icon_key = link_dict.get('icon', 'default').lower().strip()
-            if icon_key not in SOCIAL_ICONS:
-                # Detectar por URL si no hay icono válido
-                url_lower = link_dict.get('url', '').lower()
-                for key in SOCIAL_ICONS:
-                    if key != 'default' and key in url_lower:
-                        icon_key = key
-                        break
-            link_dict['fa_icon'] = SOCIAL_ICONS.get(icon_key, SOCIAL_ICONS['default'])
-            links_processed.append(link_dict)
+    for link in raw_links:
+        link_dict = dict(link)
+        url_lower = link_dict.get('url', '').lower()
+        
+        # 1. Detectar por URL primero (más confiable)
+        icon_key = 'default'
+        for key in SOCIAL_ICONS:
+            if key != 'default' and key in url_lower:
+                icon_key = key
+                break
+        
+        # 2. Si no detectó por URL, usar el icono de la BD
+        if icon_key == 'default':
+            bd_icon = link_dict.get('icon', 'default').lower().strip()
+            if bd_icon in SOCIAL_ICONS:
+                icon_key = bd_icon
+        
+        link_dict['fa_icon'] = SOCIAL_ICONS.get(icon_key, SOCIAL_ICONS['default'])
+        links_processed.append(link_dict)
 
     links = links_processed
 
