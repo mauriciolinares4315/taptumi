@@ -352,6 +352,22 @@ def public_profile(slug):
         WHERE profile_id = ? 
         ORDER BY sort_order
     """, (profile[0],)))
+           # Agregar icono de Font Awesome a cada link
+    links_processed = []
+    for link in links:
+            link_dict = dict(link)
+            icon_key = link_dict.get('icon', 'default').lower().strip()
+            if icon_key not in SOCIAL_ICONS:
+                # Detectar por URL si no hay icono válido
+                url_lower = link_dict.get('url', '').lower()
+                for key in SOCIAL_ICONS:
+                    if key != 'default' and key in url_lower:
+                        icon_key = key
+                        break
+            link_dict['fa_icon'] = SOCIAL_ICONS.get(icon_key, SOCIAL_ICONS['default'])
+            links_processed.append(link_dict)
+
+    links = links_processed
 
     # Obtener galeria
     gallery = db.fetchall(db.execute("""
@@ -391,22 +407,7 @@ def api_get_profile(slug):
         SELECT platform, url, label, icon FROM social_links 
         WHERE profile_id = ? ORDER BY sort_order
     """, (profile[0],)))
-            # Agregar icono de Font Awesome a cada link
-    links_processed = []
-    for link in links:
-            link_dict = dict(link)
-            icon_key = link_dict.get('icon', 'default').lower().strip()
-            if icon_key not in SOCIAL_ICONS:
-                # Detectar por URL si no hay icono válido
-                url_lower = link_dict.get('url', '').lower()
-                for key in SOCIAL_ICONS:
-                    if key != 'default' and key in url_lower:
-                        icon_key = key
-                        break
-            link_dict['fa_icon'] = SOCIAL_ICONS.get(icon_key, SOCIAL_ICONS['default'])
-            links_processed.append(link_dict)
-
-    links = links_processed
+     
 
     gallery = db.fetchall(db.execute("""
         SELECT image_url, caption FROM gallery 
