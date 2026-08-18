@@ -3,7 +3,7 @@
    ============================================================ */
 
 :root {
-    --primary: #1a1a2e;
+    --primary: #25D366;
     --whatsapp: #25D366;
     --email: #333333;
     --surface: #f8f9fa;
@@ -175,13 +175,13 @@ body {
 .social-links {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 10px;
 }
 
 .social-link {
-    display: flex;
-    align-items: center;
-    gap: 14px;
+    display: block !important;
+    text-align: left !important;
     background: #ffffff;
     border: 1px solid var(--border);
     padding: 14px 16px;
@@ -190,8 +190,9 @@ body {
     color: var(--text-primary);
     font-size: 15px;
     font-weight: 500;
-    transition: background 0.15s ease, transform 0.15s ease;
     box-shadow: var(--shadow);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .social-link:hover {
@@ -204,27 +205,30 @@ body {
 }
 
 .social-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    background: linear-gradient(135deg, var(--primary), #2d3561);
-    color: #ffffff;
-    display: flex;
+    display: inline-flex !important;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
-    font-weight: 700;
+    vertical-align: middle !important;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    font-size: 22px;
+    color: #ffffff;
+    background: #1a1a2e;
     flex-shrink: 0;
+    margin-right: 14px;
 }
 
 .social-label {
-    flex: 1;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    /* Elimina cualquier flex */
 }
 
-.social-arrow {
+/*.social-arrow {
     color: var(--text-muted);
     flex-shrink: 0;
-}
+}*/
 
 /* Galeria */
 .gallery-section {
@@ -343,6 +347,18 @@ body {
 
 .social-link:hover .social-icon {
     transform: scale(1.08);
+}
+/* ===== FOOTER UNIFICADO ===== */
+.footer-copyright {
+    font-size: 12px;
+    color: var(--text-muted);   /* gris suave */
+    text-align: center;
+    margin-top: 20px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+.footer-copyright:hover {
+    opacity: 1;  /* opcional: más visible al pasar el ratón */
 }
 
 /* === COLORES OFICIALES POR RED SOCIAL === */

@@ -229,7 +229,7 @@
     const container = document.querySelector('.carousel-container');
     container.addEventListener('mouseenter', () => clearInterval(autoplay));
     container.addEventListener('mouseleave', () => {
-        autoplay = setInterval(() => window.moveCarousel(1), 5000);
+        autoplay = setInterval(() => window.moveCarousel(1), 3000);
     });
 
     // Swipe en móvil
@@ -245,7 +245,7 @@
         if (Math.abs(diff) > 50) {
             window.moveCarousel(diff > 0 ? 1 : -1);
         }
-        autoplay = setInterval(() => window.moveCarousel(1), 5000);
+        autoplay = setInterval(() => window.moveCarousel(1), 3000);
     }, {passive: true});
 
     // Lightbox
@@ -275,7 +275,7 @@
             setTimeout(() => {
                 lb.remove();
                 document.body.style.overflow = '';
-                autoplay = setInterval(() => window.moveCarousel(1), 5000);
+                autoplay = setInterval(() => window.moveCarousel(1), 3000);
             }, 300);
         }
     };

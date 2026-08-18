@@ -323,6 +323,18 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
+/* ===== FOOTER UNIFICADO ===== */
+.footer-copyright {
+    font-size: 12px;
+    color: var(--text-muted);   /* gris suave */
+    text-align: center;
+    margin-top: 20px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+.footer-copyright:hover {
+    opacity: 1;  /* opcional: más visible al pasar el ratón */
+}
 
 /* Responsive */
 @media (max-width: 480px) {
