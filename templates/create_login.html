@@ -3,156 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <link rel="stylesheet" href="/static/css/style.css">
-    <title>Acceso - Crear Perfil NFC</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .login-card {
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 40px 32px;
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-        .login-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-        }
-        h1 {
-            font-size: 22px;
-            font-weight: 700;
-            color: #1a1a2e;
-            margin-bottom: 8px;
-        }
-        p {
-            font-size: 14px;
-            color: #6b7280;
-            margin-bottom: 24px;
-        }
-        .input-field {
-            width: 100%;
-            padding: 14px 16px;
-            border: 1.5px solid #e5e7eb;
-            border-radius: 10px;
-            font-size: 16px;
-            color: #111827;
-            background: #ffffff;
-            margin-bottom: 16px;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            font-family: inherit;
-        }
-        .input-field:focus {
-            outline: none;
-            border-color: #1a1a2e;
-            box-shadow: 0 0 0 3px rgba(26, 26, 46, 0.08);
-        }
-        .password-wrapper {
-            position: relative;
-            width: 100%;
-            margin-bottom: 16px;
-        }
-        .password-wrapper .input-field {
-            margin-bottom: 0;
-            padding-right: 48px;
-        }
-        .toggle-pass {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 20px;
-            padding: 4px;
-            opacity: 0.6;
-            transition: opacity 0.2s;
-        }
-        .toggle-pass:hover {
-            opacity: 1;
-        }
-        .btn {
-            width: 100%;
-            padding: 14px;
-            background: #1a1a2e;
-            color: #ffffff;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.15s, box-shadow 0.15s;
-        }
-        .btn:hover {
-            box-shadow: 0 4px 12px rgba(26, 26, 46, 0.3);
-        }
-        .btn:active {
-            transform: scale(0.98);
-        }
-        .error-msg {
-            background: #fef2f2;
-            border: 1.5px solid #fecaca;
-            border-radius: 8px;
-            padding: 12px;
-            color: #dc2626;
-            font-size: 14px;
-            margin-bottom: 16px;
-            display: none;
-        }
-        .hint {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #9ca3af;
-        }
-        .hint code {
-            background: #f3f4f6;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-family: 'SF Mono', monospace;
-        }
-    </style>
+    <title>Acceso restringido · Crear perfil</title>
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <div class="login-card">
-        <div class="login-icon">🔐</div>
-        <h1>Acceso Restringido</h1>
-        <p>Solo administradores pueden crear nuevos perfiles NFC</p>
+    <div class="page-container" style="display:flex; align-items:center; min-height:100vh; padding-top:0; padding-bottom:0;">
+        <div class="glass-card fade-in" style="width:100%;">
+            <div class="login-icon">🔐</div>
+            <h1 class="login-title">Acceso restringido</h1>
+            <p class="login-subtitle">Solo administradores pueden crear nuevos perfiles NFC</p>
 
-        <div id="error-box" class="error-msg">Contrasena incorrecta</div>
+            <div id="error-box" class="error-msg">Contraseña incorrecta</div>
 
-        <div class="password-wrapper">
-            <input type="password" id="master-pass" class="input-field" placeholder="Contrasena maestra">
-            <button type="button" class="toggle-pass" id="toggle-pass" title="Mostrar contraseña">👁️</button>
+            <div class="login-form">
+                <div class="password-wrapper">
+                    <input type="password" id="master-pass" class="input-field" placeholder="Contraseña maestra">
+                    <button type="button" class="toggle-pass" id="toggle-pass" title="Mostrar contraseña">👁️</button>
+                </div>
+                <button onclick="login()" class="btn btn-primary">Acceder</button>
+            </div>
+
+            <p class="footer-copyright">© <span class="taptumi-year"></span> Taptumi. Todos los derechos reservados.<br>Bucaramanga, Colombia.</p>
         </div>
-        <button onclick="login()" class="btn">Acceder</button>
-
-        <p class="footer-copyright"> © <span class="taptumi-year"></span> Taptumi  Todos los derechos reservados.<br> Bucaramanga. Colombia.</p>
     </div>
-        <script>
-         document.querySelectorAll('.taptumi-year').forEach(el => {
-         el.textContent = new Date().getFullYear();
-        });
-        </script>
 
     <script>
-        function login() {
+        document.querySelectorAll('.taptumi-year').forEach(el => {
+            el.textContent = new Date().getFullYear();
+        });
+
+        async function login() {
+            const errorBox = document.getElementById('error-box');
             const pass = document.getElementById('master-pass').value;
+            errorBox.style.display = 'none';
+
             if (!pass) {
-                document.getElementById('error-box').style.display = 'block';
+                errorBox.textContent = 'Ingresa la contraseña maestra';
+                errorBox.style.display = 'block';
                 return;
             }
-            window.location.href = '/create?token=' + encodeURIComponent(pass);
+
+            try {
+                const res = await fetch('/create/access', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ master_password: pass })
+                });
+                const result = await res.json();
+
+                if (result.valid) {
+                    window.location.href = '/create';
+                } else {
+                    errorBox.textContent = result.error || 'Contraseña incorrecta';
+                    errorBox.style.display = 'block';
+                }
+            } catch (e) {
+                errorBox.textContent = 'Error de conexión. Intenta de nuevo.';
+                errorBox.style.display = 'block';
+            }
         }
 
         document.getElementById('master-pass').addEventListener('keypress', function(e) {
@@ -166,7 +74,6 @@
             this.textContent = isPassword ? '🙈' : '👁️';
             this.title = isPassword ? 'Ocultar contraseña' : 'Mostrar contraseña';
         });
-        
     </script>
 </body>
 </html>
