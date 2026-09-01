@@ -26,4 +26,6 @@ def attach_social_icon(link_dict: dict) -> dict:
             icon_key = bd_icon
 
     link_dict["fa_icon"] = SOCIAL_ICONS.get(icon_key, SOCIAL_ICONS["default"])
+    link_dict["icon_key"] = icon_key 
     return link_dict
+    
