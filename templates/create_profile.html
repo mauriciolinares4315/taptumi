@@ -3,203 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Nuevo Perfil NFC</title>
+    <title>Crear nuevo perfil NFC</title>
     <link rel="stylesheet" href="/static/css/style.css">
-    <style>
-        .create-container {
-            max-width: 480px;
-            margin: 0 auto;
-            padding: 24px 20px 40px;
-        }
-        .create-header {
-            text-align: center;
-            margin-bottom: 32px;
-            padding-top: 20px;
-        }
-        .create-header h1 {
-            font-size: 26px;
-            font-weight: 700;
-            color: var(--text-primary, #111827);
-            margin-bottom: 8px;
-        }
-        .create-header p {
-            font-size: 15px;
-            color: var(--text-secondary, #6b7280);
-        }
-        .form-card {
-            background: #ffffff;
-            border: 1px solid var(--border, #e5e7eb);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 16px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-        }
-        .form-card-title {
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: var(--text-muted, #9ca3af);
-            margin: 0 0 16px;
-            font-weight: 600;
-        }
-        .form-group {
-            margin-bottom: 16px;
-        }
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-secondary, #6b7280);
-            margin-bottom: 6px;
-        }
-        .form-group label .required {
-            color: #ef4444;
-        }
-        .input-field {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1.5px solid var(--border, #e5e7eb);
-            border-radius: 8px;
-            font-size: 15px;
-            color: var(--text-primary, #111827);
-            background: #ffffff;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            font-family: inherit;
-        }
-        .input-field:focus {
-            outline: none;
-            border-color: #1a1a2e;
-            box-shadow: 0 0 0 3px rgba(26, 26, 46, 0.08);
-        }
-        .input-field::placeholder {
-            color: #9ca3af;
-        }
-        .input-hint {
-            font-size: 12px;
-            color: #9ca3af;
-            margin-top: 4px;
-        }
-        .slug-preview {
-            background: #f8f9fa;
-            border: 1.5px dashed var(--border, #e5e7eb);
-            border-radius: 8px;
-            padding: 12px 14px;
-            font-size: 14px;
-            color: var(--text-secondary, #6b7280);
-            font-family: 'SF Mono', monospace;
-            word-break: break-all;
-        }
-        .slug-preview strong {
-            color: var(--text-primary, #111827);
-        }
-        .btn-primary {
-            width: 100%;
-            padding: 16px;
-            background: #1a1a2e;
-            color: #ffffff;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.15s, box-shadow 0.15s;
-        }
-        .btn-primary:hover {
-            box-shadow: 0 4px 12px rgba(26, 26, 46, 0.25);
-        }
-        .btn-primary:active {
-            transform: scale(0.98);
-        }
-        .btn-secondary {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            background: transparent;
-            color: var(--text-secondary, #6b7280);
-            border: 1.5px solid var(--border, #e5e7eb);
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 600;
-            text-align: center;
-            text-decoration: none;
-            cursor: pointer;
-            transition: background 0.15s;
-        }
-        .btn-secondary:hover {
-            background: #f8f9fa;
-        }
-        .success-card {
-            background: #f0fdf4;
-            border: 1.5px solid #bbf7d0;
-            border-radius: 12px;
-            padding: 24px;
-            text-align: center;
-            margin-bottom: 16px;
-        }
-        .success-card h2 {
-            font-size: 20px;
-            color: #166534;
-            margin-bottom: 8px;
-        }
-        .success-card p {
-            font-size: 14px;
-            color: #15803d;
-            margin-bottom: 16px;
-        }
-        .nfc-url-box {
-            background: #ffffff;
-            border: 2px solid #22c55e;
-            border-radius: 8px;
-            padding: 16px;
-            margin: 16px 0;
-            font-family: 'SF Mono', monospace;
-            font-size: 14px;
-            word-break: break-all;
-            color: #1a1a2e;
-        }
-        .error-msg {
-            background: #fef2f2;
-            border: 1.5px solid #fecaca;
-            border-radius: 8px;
-            padding: 12px;
-            color: #dc2626;
-            font-size: 14px;
-            margin-bottom: 16px;
-            display: none;
-        }
-        @media (max-width: 480px) {
-            .create-container {
-                padding: 16px;
-            }
-        }
-    </style>
 </head>
 <body>
-    <div class="create-container">
+    <div class="page-container">
         <!-- Formulario de creación -->
         <div id="create-form">
             <div class="create-header">
-                <h1>🎯 Crear Perfil NFC</h1>
+                <h1>🎯 Crear perfil NFC</h1>
                 <p>Genera una nueva tarjeta digital en segundos</p>
             </div>
 
             <div id="error-box" class="error-msg"></div>
 
-            <div class="form-card">
+            <div class="glass-card form-card">
                 <h3 class="form-card-title">Identificador único</h3>
                 <div class="form-group">
                     <label>Slug <span class="required">*</span></label>
-                    <input type="text" id="slug" class="input-field" placeholder="maria-gonzalez" 
-                           oninput="updateSlugPreview()">
+                    <input type="text" id="slug" class="input-field" placeholder="maria-gonzalez" oninput="updateSlugPreview()">
                     <p class="input-hint">Solo letras, números y guiones. Sin espacios ni acentos.</p>
                 </div>
                 <div class="slug-preview">
                     URL de tu tarjeta:<br>
-                    <strong id="slug-url">taptumi.onrender.com/c/tu-slug</strong>
+                    <strong id="slug-url">tusitio.com/c/tu-slug</strong>
                 </div>
             </div>
 
-            <div class="form-card">
+            <div class="glass-card form-card">
                 <h3 class="form-card-title">Información básica</h3>
                 <div class="form-group">
                     <label>Nombre completo <span class="required">*</span></label>
@@ -215,7 +46,7 @@
                 </div>
             </div>
 
-            <div class="form-card">
+            <div class="glass-card form-card">
                 <h3 class="form-card-title">Datos de contacto</h3>
                 <div class="form-group">
                     <label>WhatsApp (solo números)</label>
@@ -232,81 +63,106 @@
                 </div>
             </div>
 
-            <div class="form-card">
+            <div class="glass-card form-card">
                 <h3 class="form-card-title">Seguridad</h3>
                 <div class="form-group">
                     <label>Contraseña del panel admin <span class="required">*</span></label>
-                    <input type="password" id="password" class="input-field" placeholder="Mínimo 6 caracteres">
+                    <div class="password-wrapper">
+                        <input type="password" id="password" class="input-field" placeholder="Mínimo 6 caracteres">
+                        <button type="button" class="toggle-password" onclick="togglePassword('password', this)" title="Mostrar/ocultar contraseña">👁️</button>
+                    </div>
                     <p class="input-hint">La necesitarás para editar tu perfil después.</p>
                 </div>
             </div>
 
-            <div class="form-card">
+            <div class="glass-card form-card">
                 <h3 class="form-card-title">Foto de perfil</h3>
-                <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
-                    <div id="photo-preview" style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #1a1a2e, #2d3561); display: flex; align-items: center; justify-content: center; overflow: hidden; border: 3px solid #e5e7eb; flex-shrink: 0;">
-                        <span id="photo-initial" style="font-size: 28px; font-weight: 700; color: white;">?</span>
-                        <img id="photo-img-preview" src="" style="width: 100%; height: 100%; object-fit: cover; display: none;" alt="">
+                <div class="photo-upload-row">
+                    <div class="photo-avatar" id="photo-preview">
+                        <span id="photo-initial">?</span>
+                        <img id="photo-img-preview" src="" style="display:none;" alt="">
                     </div>
-                    <div style="flex: 1;">
-                        <input type="file" id="photo-file" accept="image/*" style="display: none;" onchange="handlePhotoUpload(event)">
-                        <button type="button" onclick="document.getElementById('photo-file').click()" style="padding: 10px 18px; background: #1a1a2e; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600;">
-                            📷 Subir foto
-                        </button>
-                        <p id="photo-status" style="font-size: 12px; color: #9ca3af; margin: 6px 0 0;">Sin foto seleccionada</p>
+                    <div style="flex:1;">
+                        <input type="file" id="photo-file" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event)">
+                        <button type="button" class="btn btn-upload" onclick="document.getElementById('photo-file').click()">📷 Subir foto</button>
+                        <p id="photo-status" class="photo-status">Sin foto seleccionada</p>
                     </div>
                 </div>
                 <input type="hidden" id="photo-url" value="">
                 <p class="input-hint">Formatos: JPG, PNG. Máximo 5MB.</p>
             </div>
 
-            <div class="form-card">
-                <h3 class="form-card-title">Autenticacion</h3>
-                <div class="form-group">
-                    <label>Contrasena maestra <span class="required">*</span></label>
-                    <input type="password" id="master-password" class="input-field" placeholder="Solo administradores">
-                    <p class="input-hint">Necesaria para crear perfiles nuevos.</p>
-                </div>
-            </div>
-
-            <button onclick="createProfile()" class="btn-primary">Crear Perfil</button>
-            <div style="margin-top: 12px;">
-                <a href="/c/demo" class="btn-secondary">Ver ejemplo existente</a>
+            <button onclick="createProfile()" class="btn btn-primary">Crear perfil</button>
+            <div style="margin-top:12px;">
+                <a href="/c/demo" class="btn btn-secondary">Ver ejemplo existente</a>
             </div>
         </div>
 
         <!-- Resultado exitoso -->
         <div id="success-result" style="display:none;">
-            <div class="success-card">
+            <div class="glass-card success-card fade-in">
                 <h2>✅ Perfil creado</h2>
                 <p>Tu tarjeta NFC está lista. Escribe esta URL en tu tag:</p>
                 <div class="nfc-url-box" id="success-url"></div>
-                <p style="font-size: 13px; color: #15803d;">
-                    Panel de edición: <span id="success-admin"></span>
-                </p>
+                <p>Panel de edición: <span id="success-admin"></span></p>
             </div>
-            <a href="/create" class="btn-secondary">Crear otro perfil</a>
-            <p class="footer-copyright"> © <span class="taptumi-year"></span> Taptumi  Todos los derechos reservados.<br> Bucaramanga. Colombia.</p>
+            <div style="margin-top:12px;">
+                <a href="/create" class="btn btn-secondary">Crear otro perfil</a>
+            </div>
+            <p class="footer-copyright">© <span class="taptumi-year"></span> Taptumi. Todos los derechos reservados.<br>Bucaramanga, Colombia.</p>
         </div>
     </div>
-        <script>
-         document.querySelectorAll('.taptumi-year').forEach(el => {
-         el.textContent = new Date().getFullYear();
-        });
-        </script>
 
     <script>
+        document.querySelectorAll('.taptumi-year').forEach(el => {
+            el.textContent = new Date().getFullYear();
+        });
+
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+            btn.textContent = isPassword ? '🙈' : '👁️';
+        }
+
         function updateSlugPreview() {
             const slug = document.getElementById('slug').value.trim() || 'tu-slug';
             const cleanSlug = slug.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-');
             document.getElementById('slug-url').textContent = `tusitio.com/c/${cleanSlug}`;
         }
 
+        async function handlePhotoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const statusEl = document.getElementById('photo-status');
+            statusEl.textContent = '⏳ Subiendo...';
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                const result = await res.json();
+
+                if (result.url) {
+                    document.getElementById('photo-url').value = result.url;
+                    document.getElementById('photo-img-preview').src = result.url;
+                    document.getElementById('photo-img-preview').style.display = 'block';
+                    document.getElementById('photo-initial').style.display = 'none';
+                    statusEl.textContent = '✅ Foto subida';
+                } else {
+                    statusEl.textContent = '❌ ' + (result.error || 'Error al subir');
+                }
+            } catch (e) {
+                statusEl.textContent = '❌ Error de conexión';
+            }
+        }
+
         async function createProfile() {
             const errorBox = document.getElementById('error-box');
             errorBox.style.display = 'none';
 
-            // Validar campos obligatorios
             const slug = document.getElementById('slug').value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-');
             const name = document.getElementById('name').value.trim();
             const password = document.getElementById('password').value;
@@ -327,15 +183,7 @@
                 return;
             }
 
-            const masterPassword = document.getElementById('master-password').value.trim();
-            if (!masterPassword) {
-                errorBox.textContent = '❌ La contrasena maestra es obligatoria';
-                errorBox.style.display = 'block';
-                return;
-            }
-
             const data = {
-                master_password: masterPassword,
                 slug: slug,
                 name: name,
                 photo_url: document.getElementById('photo-url').value,
