@@ -41,6 +41,13 @@ class Config:
     RATELIMIT_LOGIN = os.environ.get("RATELIMIT_LOGIN", "8 per minute")
     RATELIMIT_CREATE = os.environ.get("RATELIMIT_CREATE", "5 per minute")
 
+    # Mensaje predeterminado que se precarga al escribir por WhatsApp desde
+    # el botón del perfil público. Un solo lugar para editarlo en toda la app.
+    WHATSAPP_DEFAULT_MESSAGE = os.environ.get(
+        "WHATSAPP_DEFAULT_MESSAGE",
+        "Hola, escaneé tu Taptumi Card y quiero ponerme en contacto contigo.",
+    )
+
     def validate(self):
         """Falla rapido y claro si falta algo critico para arrancar."""
         missing = [

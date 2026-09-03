@@ -1,6 +1,7 @@
 """Rutas publicas: lo que ve cualquier persona que escanea el tag NFC."""
 from flask import Blueprint, render_template, request
 
+from app.config import config
 from app.db import get_db
 from app.utils import attach_social_icon
 
@@ -54,6 +55,7 @@ def profile(slug):
         links=links,
         gallery=gallery,
         total_scans=total_scans,
+        whatsapp_message=config.WHATSAPP_DEFAULT_MESSAGE,
     )
 
 
