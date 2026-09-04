@@ -62,3 +62,9 @@ def profile(slug):
 @public_bp.app_errorhandler(404)
 def not_found(_error):
     return render_template("404.html"), 404
+
+
+@public_bp.route("/")
+def landing():
+    """Landing de marca Taptumi — raíz del dominio."""
+    return render_template("landing.html", taptumi_landing_url=config.TAPTUMI_LANDING_URL)

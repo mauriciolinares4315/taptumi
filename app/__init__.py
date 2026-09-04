@@ -33,6 +33,11 @@ def create_app():
     _register_extensions(app)
     _register_blueprints(app)
 
+    @app.context_processor
+    def inject_globals():
+        """Variables disponibles automaticamente en todos los templates."""
+        return {"taptumi_landing_url": config.TAPTUMI_LANDING_URL}
+
     with app.app_context():
         from app.db import init_db
 

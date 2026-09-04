@@ -47,6 +47,9 @@ class Config:
         "WHATSAPP_DEFAULT_MESSAGE",
         "Hola, escaneé tu Taptumi Card y quiero ponerme en contacto contigo.",
     )
+    # URL de la landing de marca (Taptumi), enlazada desde el footer de
+    # todas las páginas. Placeholder hasta que definas el dominio real.
+    TAPTUMI_LANDING_URL = os.environ.get("TAPTUMI_LANDING_URL", "/")
 
     def validate(self):
         """Falla rapido y claro si falta algo critico para arrancar."""
