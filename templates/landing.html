@@ -12,8 +12,8 @@
   :root {
     --bg-deep: #050b18;
     --bg-mid: #0b2545;
-    --glow-teal: #14b8a6;
-    --glow-indigo: #4c6fff;
+    --glow-teal: #4c6fff;
+    --glow-indigo: #14b8a6;
 
     --accent: #4c6fff;
     --whatsapp: #25d366;
@@ -80,11 +80,16 @@
   }
   .brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 700; font-size: 19px; }
   .brand-mark {
-    width: 32px; height: 32px; border-radius: 10px;
-    background: linear-gradient(135deg, var(--glow-teal), var(--glow-indigo));
+    width: 34px; height: 34px;
     display: flex; align-items: center; justify-content: center;
   }
-  .brand-mark svg { width: 16px; height: 16px; fill: #fff; }
+  .brand-mark img { width: 100%; height: 100%; object-fit: contain; }
+
+  .hero-logo {
+    width: 220px; margin: 0 auto 28px;
+  }
+  .hero-logo img { width: 100%; height: auto; display: block; }
+  
   .nav-cta {
     display: inline-flex; align-items: center; gap: 8px;
     background: var(--whatsapp); color: #fff; font-weight: 600; font-size: 14px;
@@ -155,6 +160,29 @@
   .product-card.p-pets .product-icon { background: linear-gradient(135deg, var(--glow-indigo), #8a6dff); }
 
   .product-card h3 { font-size: 20px; font-weight: 700; }
+  .product-card.p-cards--media {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 18px;
+  align-items: stretch;
+  }
+  .product-card.p-cards--media .product-shot {
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-bg-soft);
+  }
+  .product-card.p-cards--media .product-shot img {
+    width: 100%; height: 100%; object-fit: cover; object-position: top center;
+    display: block; 
+  }
+  .product-card.p-cards--media .product-body {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+
+  @media (max-width: 640px) {
+    .product-card.p-cards--media { grid-template-columns: 90px 1fr; }
+  }
   .product-tag {
     display: inline-block; font-size: 11.5px; font-weight: 600; color: var(--text-faint);
     letter-spacing: 0.02em;
@@ -234,10 +262,10 @@
 <nav>
   <div class="nav-inner">
     <a href="#top" class="brand">
-      <span class="brand-mark">
-        <svg viewBox="0 0 640 512" xmlns="http://www.w3.org/2000/svg"><path d="M54.2 202.9C123.2 136.7 216.8 96 320 96s196.8 40.7 265.8 106.9c12.8 12.2 33 11.8 45.2-1s11.8-33-1-45.2C549.7 79.5 440.4 32 320 32S90.3 79.5 10 156.7c-12.8 12.2-13.2 32.4-1 45.2s32.4 13.2 45.2 1zm90.5 98.4C183.1 264.6 248.8 224 320 224s136.9 40.6 175.2 77.3c12.8 12.2 33 11.7 45.2-1.1s11.7-33-1.1-45.2C489.1 208.6 411.7 160 320 160s-169.1 48.6-219.4 95.1c-12.8 12.2-13.3 32.4-1.1 45.2s32.4 13.3 45.2 1.1zM320 288c-42.4 0-83.2 16.8-113.3 46.7c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0C270.5 361.5 294.7 352 320 352s49.5 9.5 68.1 27.9c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3C403.2 304.8 362.4 288 320 288zm64 160a64 64 0 1 0 -128 0 64 64 0 1 0 128 0z"/></svg>
-      </span>
-      Taptumi
+    <span class="brand-mark">
+    <img src="/static/img/taptumi_logo_icon_blanco.png" alt="Taptumi">
+    </span>
+    Taptumi
     </a>
     <a href="https://wa.me/573173815828?text=Hola%2C%20vi%20la%20p%C3%A1gina%20de%20Taptumi%20y%20quiero%20saber%20m%C3%A1s" class="nav-cta">
       <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
@@ -248,10 +276,11 @@
 
 <div class="wrap" id="top">
 
-  <section class="hero">
-    <span class="hero-eyebrow">
-      <svg viewBox="0 0 640 512" xmlns="http://www.w3.org/2000/svg"><path d="M320 288c-42.4 0-83.2 16.8-113.3 46.7c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0C270.5 361.5 294.7 352 320 352s49.5 9.5 68.1 27.9c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3C403.2 304.8 362.4 288 320 288z"/></svg>
-      Identidad digital con NFC
+<section class="hero">
+  <div class="hero-logo">
+    <img src="/static/img/taptumi_logo_full_blanco.png" alt="Taptumi">
+  </div>
+    <span class="hero-eyebrow">Identidad digital tecnologia NFC
     </span>
     <h1>Un toque para presentarte, <span class="accent">identificarte o proteger</span> a los tuyos</h1>
     <p>Taptumi convierte una tarjeta o placa NFC en información que se abre al instante: quién eres, cómo contactarte o qué hacer en una emergencia. Sin apps, sin fricción.</p>
@@ -273,19 +302,20 @@
     </div>
 
     <div class="products">
-      <div class="product-card p-cards">
-        <div class="product-icon">
-          <svg viewBox="0 0 576 512" xmlns="http://www.w3.org/2000/svg"><path d="M0 96l576 0c0-35.3-28.7-64-64-64H64C28.7 32 0 60.7 0 96zm0 32V416c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V128H0zM64 320h64c17.7 0 32 14.3 32 32s-14.3 32-32 32H64c-17.7 0-32-14.3-32-32s14.3-32 32-32zm128 32c0-17.7 14.3-32 32-32H352c17.7 0 32 14.3 32 32s-14.3 32-32 32H224c-17.7 0-32-14.3-32-32z"/></svg>
+      <div class="product-card p-cards p-cards--media">
+        <div class="product-shot">
+            <img src="/static/img/nfc-app.png" alt="Vista previa de Taptumi Card">
+          </div>
+          <div class="product-body">
+            <div>
+              <span class="product-tag">Taptumi Card</span>
+              <h3>Presentación personal</h3>
+            </div>
+            <p class="desc">Tu tarjeta de presentación digital: nombre, cargo, redes y forma de contacto. La persona la escanea y guarda tus datos al instante, sin escribir nada a mano.</p>
+            <!-- REEMPLAZAR con el link real del perfil de demostración -->
+            <a href="#" class="product-link">Ver perfil de ejemplo <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg></a>
+            </div>
         </div>
-        <div>
-          <span class="product-tag">Taptumi Card</span>
-          <h3>Presentación personal</h3>
-        </div>
-        <p class="desc">Tu tarjeta de presentación digital: nombre, cargo, redes y forma de contacto. La persona la escanea y guarda tus datos al instante, sin escribir nada a mano.</p>
-        <!-- REEMPLAZAR con el link real del perfil de demostración -->
-        <a href="#" class="product-link">Ver perfil de ejemplo <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg></a>
-      </div>
-
       <div class="product-card p-people">
         <div class="product-icon">
           <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M228.3 469.1L47.6 300.4c-4.2-3.9-8.2-8.1-11.9-12.4h87c22.6 0 43-13.6 51.7-34.5l1.9-4.6c3.2-7.8 10.7-12.9 19.1-12.9c8.3 0 15.7 5 18.9 12.6l17.4 41.5c5.5 13.1 20.7 19.1 33.8 13.6c5.4-2.3 9.9-6.3 12.8-11.5l25.6-45.6c1.8-3.2 5.2-5.2 8.9-5.2c7.4 0 13.5 6.1 13.5 13.5c0 4.5-2.3 8.6-6 11.1l-49.6 33.1c-6.5 4.3-9.5 12.5-7.3 20.1s9.1 12.9 17 12.9h147.3c-3.7 4.4-7.7 8.5-11.9 12.4L283.7 469.1c-7.5 7-17.4 10.9-27.7 10.9s-20.2-3.9-27.7-10.9z"/></svg>
@@ -308,8 +338,8 @@
           <h3>Identificación de mascotas</h3>
         </div>
         <p class="desc">Una placa NFC para el collar. Si tu mascota se pierde, quien la encuentre escanea y ve tu contacto al instante, sin depender de un microchip ni de terceros.</p>
-        <span class="product-link soon">Próximamente</span>
-      </div>
+        <a href="#" class="product-link">Ver perfil de ejemplo <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg></a>
+        </div>
     </div>
   </section>
 
@@ -342,7 +372,7 @@
       <div class="story-icon">
         <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M349.4 44.6c5.9-13.7 1.5-29.7-10.6-38.5s-28.6-8-39.9 1.8l-256 224c-10 8.8-13.6 22.9-9 35.3S50.7 288 64 288H175.5L98.6 467.4c-5.9 13.7-1.5 29.7 10.6 38.5s28.6 8 39.9-1.8l256-224c10-8.8 13.6-22.9 9-35.3s-16.4-20.7-29.7-20.7H272.5L349.4 44.6z"/></svg>
       </div>
-      <p>Taptumi nació en Bucaramanga con una idea simple: <strong>la información importante no debería estar guardada donde nadie la ve.</strong> Empezamos con tarjetas de presentación digital, y al ver cuánto ayudaba tener los datos de contacto de emergencia a un toque de distancia, lo llevamos a identificación de personas y, pronto, de mascotas. Seguimos construyendo esto como un emprendimiento local — si tienes ideas, preguntas o quieres una tarjeta propia, escríbenos.</p>
+      <p>Taptumi nació en Bucaramanga con una idea simple: <strong>la información importante no debería estar guardada donde nadie la ve.</strong> Empezamos con tarjetas de presentación digital, y al ver cuánto ayudaba tener los datos de contacto de emergencia a un toque de distancia, lo llevamos a identificación de personas y mascotas. Seguimos construyendo esto como un emprendimiento local — si tienes ideas, preguntas o quieres una tarjeta propia, escríbenos.</p>
     </div>
   </section>
 

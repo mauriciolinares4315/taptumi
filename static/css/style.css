@@ -121,6 +121,14 @@ a { color: inherit; }
 .btn-whatsapp { background: var(--whatsapp); border-color: var(--whatsapp); color: #fff; box-shadow: 0 4px 16px rgba(37, 211, 102, 0.3); }
 .btn-email { background: var(--glass-bg-strong); }
 .btn-upload { background: var(--glass-bg-strong); color: var(--text-primary); padding: 10px 18px; font-size: 14px; }
+.btn-remove-photo {
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid var(--danger-dim);
+  padding: 10px 14px;
+  font-size: 13px;
+}
+.btn-remove-photo:hover { background: var(--danger-dim); }
 .btn-row { display: flex; gap: 10px; }
 .btn-row .btn { flex: 1; }
 

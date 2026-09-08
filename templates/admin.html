@@ -62,7 +62,10 @@
                     </div>
                     <div style="flex:1;">
                         <input type="file" id="photo-file" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event)">
-                        <button type="button" class="btn btn-upload" onclick="document.getElementById('photo-file').click()">📷 Cambiar foto</button>
+                        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                            <button type="button" class="btn btn-upload" onclick="document.getElementById('photo-file').click()">📷 Cambiar foto</button>
+                            <button type="button" class="btn btn-remove-photo" onclick="removePhoto()">🗑️ Quitar foto</button>
+                        </div>
                         <p id="photo-status" class="photo-status">Sin foto seleccionada</p>
                     </div>
                 </div>
@@ -292,6 +295,15 @@
             } catch (e) {
                 statusEl.textContent = '❌ Error de conexión';
             }
+        }
+        function removePhoto() {
+            document.getElementById('edit-photo-url').value = '';
+            document.getElementById('photo-img-preview').src = '';
+            document.getElementById('photo-img-preview').style.display = 'none';
+            document.getElementById('photo-initial').style.display = 'block';
+            document.getElementById('photo-initial').textContent =
+                (document.getElementById('edit-name').value || '?').charAt(0).toUpperCase();
+            document.getElementById('photo-status').textContent = 'Foto eliminada — recuerda darle a "Guardar cambios"';
         }
 
         // ===================== GALLERY =====================
