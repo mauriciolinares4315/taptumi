@@ -1,8 +1,11 @@
 <!-- templates/gallery_carousel.html -->
 <!-- Se incluye dentro de la sección .gallery-section de profile.html,
-     que ya provee el título "Galería" — este parcial solo es el carrusel. -->
+     que ya provee el título "Galería" — este parcial solo es el carrusel.
+     Usa scroll-snap nativo del navegador (no JS simulando el arrastre):
+     el swipe sigue el dedo en tiempo real, con el momentum/rebote propios
+     del sistema operativo, igual que un carrusel nativo de iOS. -->
 <div class="carousel-container">
-    <button class="carousel-btn prev" onclick="moveCarousel(-1)" aria-label="Anterior">‹</button>
+   <!-- <button class="carousel-btn prev" onclick="moveCarousel(-1)" aria-label="Anterior">‹</button> -->
 
     <div class="carousel-track" id="carouselTrack">
         {% for img in gallery %}
@@ -17,14 +20,13 @@
         {% endfor %}
     </div>
 
-    <button class="carousel-btn next" onclick="moveCarousel(1)" aria-label="Siguiente">›</button>
+   <!-- <button class="carousel-btn next" onclick="moveCarousel(1)" aria-label="Siguiente">›</button> -->
 </div>
 
 <div class="carousel-dots" id="carouselDots"></div>
 
 <script>
 (function() {
-    let currentSlide = 0;
     const track = document.getElementById('carouselTrack');
     if (!track) return;
     const slides = track.children;
@@ -39,47 +41,40 @@
         dot.onclick = () => goToSlide(i);
         dotsContainer.appendChild(dot);
     }
+    const dots = dotsContainer.querySelectorAll('.carousel-dot');
 
-    function updateCarousel() {
-        track.style.transform = `translateX(-${currentSlide * 100}%)`;
-        const dots = dotsContainer.querySelectorAll('.carousel-dot');
-        dots.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
+    function currentIndex() {
+        return Math.round(track.scrollLeft / track.clientWidth);
+    }
+
+    function setActiveDot(index) {
+        dots.forEach((d, i) => d.classList.toggle('active', i === index));
     }
 
     window.moveCarousel = function(dir) {
-        currentSlide = (currentSlide + dir + totalSlides) % totalSlides;
-        updateCarousel();
+        const next = Math.max(0, Math.min(totalSlides - 1, currentIndex() + dir));
+        track.scrollTo({ left: next * track.clientWidth, behavior: 'smooth' });
     };
 
     window.goToSlide = function(index) {
-        currentSlide = index;
-        updateCarousel();
+        track.scrollTo({ left: index * track.clientWidth, behavior: 'smooth' });
     };
 
-    let autoplay = setInterval(() => window.moveCarousel(1), 5000);
-    const container = document.querySelector('.carousel-container');
-    container.addEventListener('mouseenter', () => clearInterval(autoplay));
-    container.addEventListener('mouseleave', () => {
-        autoplay = setInterval(() => window.moveCarousel(1), 3000);
+    // El scroll nativo (touch, trackpad, o arrastre con mouse) ya mueve el
+    // carrusel solo; aqui unicamente sincronizamos los puntos indicadores
+    // mientras el usuario desliza, sin interferir con el gesto.
+    let scrollTimeout;
+    track.addEventListener('scroll', () => {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => setActiveDot(currentIndex()), 60);
+    }, { passive: true });
+
+    // Reajustar la posicion si la ventana cambia de tamaño (rotacion de pantalla, etc.)
+    window.addEventListener('resize', () => {
+        track.scrollTo({ left: currentIndex() * track.clientWidth });
     });
 
-    let touchStartX = 0;
-    let touchEndX = 0;
-    track.addEventListener('touchstart', e => {
-        touchStartX = e.changedTouches[0].screenX;
-        clearInterval(autoplay);
-    }, {passive: true});
-    track.addEventListener('touchend', e => {
-        touchEndX = e.changedTouches[0].screenX;
-        const diff = touchStartX - touchEndX;
-        if (Math.abs(diff) > 50) {
-            window.moveCarousel(diff > 0 ? 1 : -1);
-        }
-        autoplay = setInterval(() => window.moveCarousel(1), 3000);
-    }, {passive: true});
-
     window.openLightbox = function(src) {
-        clearInterval(autoplay);
         let lb = document.querySelector('.lightbox-overlay');
         if (lb) lb.remove();
 
@@ -103,7 +98,6 @@
             setTimeout(() => {
                 lb.remove();
                 document.body.style.overflow = '';
-                autoplay = setInterval(() => window.moveCarousel(1), 3000);
             }, 300);
         }
     };

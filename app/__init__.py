@@ -17,6 +17,18 @@ from app.config import config  # noqa: E402  (despues de load_dotenv a proposito
 
 def create_app():
     app = Flask(__name__, template_folder="../templates", static_folder="../static")
+    if os.environ.get("FLASK_ENV") != "production":
+        app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
+        app.config["TEMPLATES_AUTO_RELOAD"] = True
+        app.jinja_env.auto_reload = True
+        @app.after_request
+        def add_no_cache_headers(response):
+            """En dev: que el navegador no guarde NADA."""
+            response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+            response.headers["Pragma"] = "no-cache"
+            response.headers["Expires"] = "0"
+            return response
+    
 
     config.validate()
 

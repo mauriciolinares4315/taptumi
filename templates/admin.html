@@ -22,13 +22,18 @@
                     <p id="login-error" class="error-msg">Contraseña incorrecta</p>
                 </div>
             </div>
+             <!-- ✅ Botón volver al perfil (solo visible en pantalla de login) -->
+            <a href="/c/{{ slug }}" class="btn btn-back-profile">← Volver al perfil</a>
         </div>
 
         <!-- Panel de edicion -->
         <div id="edit-section" style="display:none;">
-            <div class="edit-header">
-                <h1>Editar perfil</h1>
-                <a id="preview-link" href="/c/{{ slug }}" target="_blank" class="btn btn-preview">👁️ Ver perfil público</a>
+           <div class="edit-header">
+             <h1>Editar perfil</h1>
+                <div class="edit-header-actions">
+                    <a href="/c/{{ slug }}" class="back-floating" aria-label="Volver al perfil">← Volver </a>
+                    <a id="preview-link" href="/c/{{ slug }}" target="_blank" class="btn btn-preview">👁️ Ver perfil público</a>
+                </div>
             </div>
 
             <!-- Info basica -->
