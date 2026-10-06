@@ -4,10 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ profile.name }} - Perfil Digital</title>
+     <!-- Aplica el tema ANTES de pintar el CSS para evitar el flash -->
+    <script>
+    (function() {
+        var guardado = localStorage.getItem('taptumi-theme');
+        var tema = guardado;
+        if (!tema) {
+            // Si nunca eligió, respeta la preferencia del sistema
+            tema = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        }
+        document.documentElement.setAttribute('data-theme', tema);
+    })();
+    </script>
     <link rel="stylesheet" href="/static/css/style.css?v=3">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css?v=3">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css?v=5">
 </head>
 <body>
+    <!-- Botón de cambio de tema -->
+    <button type="button" class="theme-toggle" onclick="toggleTheme()" aria-label="Cambiar tema">
+        <span class="theme-icon-light" title="Modo claro">🌕</span>
+        <span class="theme-icon-dark" title="Modo oscuro">🌑</span>
+        
+    </button>
     <div class="page-container">
         <!-- Header -->
         <div class="profile-header fade-in">
@@ -164,6 +182,28 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(urlBlob);
         }
+
+          // ---------- Toggle de tema ----------
+        function toggleTheme() {
+            const actual = document.documentElement.getAttribute('data-theme') || 'dark';
+            const nuevo = actual === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', nuevo);
+            localStorage.setItem('taptumi-theme', nuevo);
+        }
+
+        // Sincronizar el icono visible con el tema actual
+        function actualizarIconoTema() {
+            const tema = document.documentElement.getAttribute('data-theme') || 'dark';
+            document.body.classList.toggle('theme-light-active', tema === 'light');
+        }
+
+        // Aplicar al cargar y cuando cambie
+        actualizarIconoTema();
+        new MutationObserver(actualizarIconoTema).observe(
+            document.documentElement,
+            { attributes: true, attributeFilter: ['data-theme'] }
+        );
+
     </script>
 </body>
 </html>

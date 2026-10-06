@@ -135,7 +135,17 @@ class DBConnection:
             r.raise_for_status()
             data = r.json()
 
-            result = data["results"][0]["response"]["result"]
+            first = (data.get("results") or [{}])[0]
+
+            # Turso puede devolver un error en lugar de un result set
+            if "error" in first:
+                err = first["error"]
+                raise RuntimeError(f"Turso error: {err.get('message', err)}")
+
+            if "response" not in first:
+                raise RuntimeError(f"Respuesta inesperada de Turso: {first}")
+
+            result = first["response"]["result"]
             cols = [c["name"] for c in result.get("cols", [])]
             rows = [TursoRow(cols, row) for row in result.get("rows", [])]
             rowcount = result.get("affected_row_count", 0)

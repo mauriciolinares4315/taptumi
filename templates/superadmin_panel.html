@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel — Taptumi</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="page-container">
+        <div class="edit-header">
+            <h1>Panel de perfiles</h1>
+            <a href="/superadmin/logout" class="btn btn-back-header">Salir</a>
+        </div>
+
+        <!-- Solicitudes de reset -->
+        <div class="glass-card form-card" id="requests-card" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <h3 class="form-card-title" style="margin:0;">Solicitudes pendientes</h3>
+                <span id="requests-count" class="sa-count"></span>
+            </div>
+            <div id="requests-list"></div>
+        </div>
+
+        <!-- Lista de perfiles -->
+        <div class="glass-card form-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <h3 class="form-card-title" style="margin:0;">Perfiles</h3>
+                <button class="btn btn-upload" onclick="refrescarTodo()" style="padding:6px 12px; font-size:12px;">↻ Refrescar</button>
+            </div>
+            <div id="profiles-list">
+                <p class="input-hint">Cargando...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function escapeHtml(s) {
+        if (s == null) return '';
+        return String(s)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    // -------- Perfiles --------
+    async function cargarPerfiles() {
+        const cont = document.getElementById('profiles-list');
+        try {
+            const r = await fetch('/superadmin/api/profiles');
+            if (!r.ok) throw new Error('Error ' + r.status);
+            const data = await r.json();
+
+            if (!data.profiles || data.profiles.length === 0) {
+                cont.innerHTML = '<p class="input-hint">No hay perfiles.</p>';
+                return;
+            }
+
+            cont.innerHTML = '';
+            data.profiles.forEach(p => {
+                const row = document.createElement('div');
+                row.className = 'sa-profile-row';
+
+                const info = document.createElement('div');
+                info.className = 'sa-profile-info';
+
+                const estado = p.locked
+                    ? '<span class="sa-status sa-locked">🔒 Bloqueado</span>'
+                    : (p.failed_attempts > 0
+                        ? `<span class="sa-status sa-warn">⚠️ ${p.failed_attempts} intento(s)</span>`
+                        : '<span class="sa-status sa-ok">✅ Activo</span>');
+
+                info.innerHTML = `
+                    <strong>${escapeHtml(p.name)}</strong>
+                    <small>/${escapeHtml(p.slug)}${p.email ? ' · ' + escapeHtml(p.email) : ''}</small>
+                    ${estado}
+                `;
+
+                const actions = document.createElement('div');
+                actions.className = 'sa-profile-actions';
+
+                const btnPw = document.createElement('button');
+                btnPw.className = 'btn btn-upload';
+                btnPw.textContent = '🔑 Cambiar clave';
+                btnPw.onclick = () => cambiarPassword(p.slug);
+                actions.appendChild(btnPw);
+
+                if (p.locked) {
+                    const btnUnlock = document.createElement('button');
+                    btnUnlock.className = 'btn btn-upload';
+                    btnUnlock.textContent = '🔓 Desbloquear';
+                    btnUnlock.onclick = () => toggleLock(p.slug, 'unlock');
+                    actions.appendChild(btnUnlock);
+                } else {
+                    const btnLock = document.createElement('button');
+                    btnLock.className = 'btn btn-remove-photo';
+                    btnLock.textContent = '🔒 Bloquear';
+                    btnLock.onclick = () => toggleLock(p.slug, 'lock');
+                    actions.appendChild(btnLock);
+                }
+
+                row.append(info, actions);
+                cont.appendChild(row);
+            });
+        } catch (e) {
+            cont.innerHTML = '<p class="error-msg" style="display:block;">Error al cargar: ' + e.message + '</p>';
+        }
+    }
+
+    async function cambiarPassword(slug) {
+        const nueva = prompt(`Nueva contraseña para "${slug}":`);
+        if (!nueva) return;
+        if (nueva.length < 6) { alert('Mínimo 6 caracteres'); return; }
+
+        const r = await fetch(`/superadmin/api/profiles/${slug}/password`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({new_password: nueva})
+        });
+        const data = await r.json();
+        if (data.success) {
+            alert(`✅ Contraseña de "${slug}" cambiada a:\n\n${nueva}\n\nCópiala y pásasela al usuario.`);
+            cargarPerfiles();
+        } else {
+            alert('❌ ' + (data.error || 'Error'));
+        }
+    }
+
+    async function toggleLock(slug, action) {
+        const texto = action === 'lock' ? 'bloquear' : 'desbloquear';
+        if (!confirm(`¿Seguro que quieres ${texto} el perfil "${slug}"?`)) return;
+        const r = await fetch(`/superadmin/api/profiles/${slug}/${action}`, { method: 'POST' });
+        const data = await r.json();
+        if (data.success) cargarPerfiles();
+        else alert('❌ ' + (data.error || 'Error'));
+    }
+
+    // -------- Solicitudes de reset --------
+    async function cargarSolicitudes() {
+        const card = document.getElementById('requests-card');
+        const cont = document.getElementById('requests-list');
+        const countEl = document.getElementById('requests-count');
+
+        try {
+            const r = await fetch('/superadmin/api/reset-requests');
+            const data = await r.json();
+
+            if (!data.requests || data.requests.length === 0) {
+                card.style.display = 'none';
+                return;
+            }
+
+            card.style.display = 'block';
+            countEl.textContent = data.requests.length + ' pendiente(s)';
+            cont.innerHTML = '';
+
+            data.requests.forEach(req => {
+                const el = document.createElement('div');
+                el.className = 'sa-request-card';
+
+                const info = document.createElement('div');
+                info.className = 'sa-profile-info';
+                info.innerHTML = `
+                    <strong>${escapeHtml(req.name)}</strong>
+                    <small>Perfil: /${escapeHtml(req.slug)} · ${escapeHtml(req.created_at)}</small>
+                    <small>Contacto: ${escapeHtml(req.contact)}</small>
+                    ${req.message ? '<small>Mensaje: ' + escapeHtml(req.message) + '</small>' : ''}
+                `;
+
+                const actions = document.createElement('div');
+                actions.className = 'sa-profile-actions';
+
+                // Botón cambiar clave del perfil
+                const btnPw = document.createElement('button');
+                btnPw.className = 'btn btn-upload';
+                btnPw.textContent = '🔑 Cambiar clave';
+                btnPw.onclick = () => cambiarPassword(req.slug);
+                actions.appendChild(btnPw);
+
+                // Botón WhatsApp (si el contacto parece número)
+                const soloDigitos = req.contact.replace(/\D/g, '');
+                if (soloDigitos.length >= 10) {
+                    const btnWa = document.createElement('a');
+                    btnWa.className = 'btn btn-whatsapp';
+                    btnWa.href = `https://wa.me/${soloDigitos}`;
+                    btnWa.target = '_blank';
+                    btnWa.textContent = '💬 WhatsApp';
+                    actions.appendChild(btnWa);
+                }
+
+                // Botón marcar como resuelta
+                const btnOk = document.createElement('button');
+                btnOk.className = 'btn btn-upload';
+                btnOk.textContent = '✓ Resuelta';
+                btnOk.onclick = async () => {
+                    if (!confirm('¿Marcar esta solicitud como resuelta?')) return;
+                    await fetch(`/superadmin/api/reset-requests/${req.id}/resolve`, { method: 'POST' });
+                    cargarSolicitudes();
+                };
+                actions.appendChild(btnOk);
+
+                el.append(info, actions);
+                cont.appendChild(el);
+            });
+        } catch (e) {
+            card.style.display = 'block';
+            cont.innerHTML = '<p class="error-msg" style="display:block;">Error: ' + e.message + '</p>';
+        }
+    }
+
+    function refrescarTodo() {
+        cargarPerfiles();
+        cargarSolicitudes();
+    }
+
+    // Carga inicial + auto-refresco cada 30s
+    refrescarTodo();
+    setInterval(refrescarTodo, 30000);
+    </script>
+</body>
+</html>

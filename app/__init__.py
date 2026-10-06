@@ -75,7 +75,9 @@ def _register_blueprints(app):
     from app.routes.public import public_bp
     from app.routes.api import api_bp
     from app.routes.admin import admin_bp
+    from app.routes.superadmin import superadmin_bp
 
     app.register_blueprint(public_bp)
     app.register_blueprint(api_bp)
     app.register_blueprint(admin_bp)
+    app.register_blueprint(superadmin_bp)

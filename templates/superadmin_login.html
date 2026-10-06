@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración — Taptumi</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="page-container">
+        <div class="glass-card fade-in" style="margin-top:60px;">
+            <h1 class="login-title">Panel de administración</h1>
+            <p class="login-subtitle">Acceso restringido</p>
+            <form method="POST" class="login-form">
+                <div class="password-wrapper">
+                    <input type="password" name="master_password" class="input-field"
+                           placeholder="Clave maestra" autofocus required autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn btn-primary">Entrar</button>
+                {% if error %}
+                <p class="error-msg" style="display:block;">{{ error }}</p>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</body>
+</html>

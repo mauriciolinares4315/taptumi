@@ -286,6 +286,55 @@
   .contact-card h2 { font-size: clamp(26px, 4vw, 34px); font-weight: 700; margin-bottom: 14px; }
   .contact-card p { color: var(--text-secondary); font-size: 16px; max-width: 440px; margin: 0 auto 30px; }
 
+  /* ---------- Fila de ventajas (aplica a los 3 productos por igual) ---------- */
+  .advantages {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+    margin: 8px 0 0;
+  }
+  .advantage-item {
+    display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px;
+    padding: 18px 10px;
+    background: var(--glass-bg-soft, var(--glass-bg)); border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+  }
+  .advantage-item svg {
+    width: 22px; height: 22px; fill: none; stroke: var(--glow-teal); stroke-width: 2;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+  .advantage-item span { font-size: 12.5px; color: var(--text-secondary); line-height: 1.4; font-weight: 500; }
+  @media (max-width: 640px) {
+    .advantages { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ---------- FAQ (acordeón nativo, sin JS) ---------- */
+  .faq-list { display: flex; flex-direction: column; gap: 12px; }
+  .faq-item {
+    background: var(--glass-bg); border: 1px solid var(--glass-border);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-md); overflow: hidden;
+  }
+  .faq-item summary {
+    list-style: none; cursor: pointer; padding: 18px 20px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    font-weight: 600; font-size: 15px; color: var(--text-primary);
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary .faq-chevron {
+    width: 18px; height: 18px; flex-shrink: 0; fill: none; stroke: var(--text-faint);
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    transition: transform 0.25s ease;
+  }
+  .faq-item[open] summary .faq-chevron { transform: rotate(180deg); }
+  .faq-item .faq-answer {
+    padding: 0 20px 20px; color: var(--text-secondary); font-size: 14.5px; line-height: 1.7;
+  }
+  .faq-q-text { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+  .faq-tag {
+    display: block; width: fit-content; font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--glow-teal);
+    background: rgba(20, 184, 166, 0.12); border-radius: 6px; padding: 2px 8px;
+  }
+
   /* ---------- WhatsApp flotante (siempre visible durante el scroll) ---------- */
   .wa-float {
     position: fixed; right: 20px; bottom: 20px; z-index: 60;
@@ -371,6 +420,27 @@
       Descubre más
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
     </a>
+
+    <!-- Ventajas generales: aplican igual a presentación personal, identificación de
+         personas e identificación de mascotas, por eso van antes de elegir producto -->
+    <div class="advantages">
+      <div class="advantage-item">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        <span>Sin apps que instalar</span>
+      </div>
+      <div class="advantage-item">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+        <span>NFC o QR, lo que tengas</span>
+      </div>
+      <div class="advantage-item">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        <span>Actualiza cuando quieras</span>
+      </div>
+      <div class="advantage-item">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span>iOS y Android, sin fricción</span>
+      </div>
+    </div>
   </section>
 
   <section id="productos">
@@ -461,6 +531,63 @@
         <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M349.4 44.6c5.9-13.7 1.5-29.7-10.6-38.5s-28.6-8-39.9 1.8l-256 224c-10 8.8-13.6 22.9-9 35.3S50.7 288 64 288H175.5L98.6 467.4c-5.9 13.7-1.5 29.7 10.6 38.5s28.6 8 39.9-1.8l256-224c10-8.8 13.6-22.9 9-35.3s-16.4-20.7-29.7-20.7H272.5L349.4 44.6z"/></svg>
       </div>
       <p>Taptumi nació en Bucaramanga con una idea simple: <strong>la información importante no debería estar guardada donde nadie la ve.</strong> Empezamos con tarjetas de presentación digital, y al ver cuánto ayudaba tener los datos de contacto de emergencia a un toque de distancia, lo llevamos a identificación de personas y mascotas. Seguimos construyendo esto como un emprendimiento local — si tienes ideas, preguntas o quieres una tarjeta propia, escríbenos.</p>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="section-head">
+      <h2>Preguntas frecuentes</h2>
+      <p>Lo que más preguntan antes de pedir su primera tarjeta, placa o identificación Taptumi.</p>
+    </div>
+    <div class="faq-list">
+      <details class="faq-item" open>
+        <summary>
+          ¿Necesito instalar una aplicación para usarlo?
+          <svg class="faq-chevron" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="faq-answer">No. Ni tú ni la persona que escanea necesitan instalar nada. El toque o el código QR abren un enlace normal en el navegador del celular — funciona igual en una tarjeta personal, una identificación o una placa para mascota.</div>
+      </details>
+      <details class="faq-item">
+        <summary>
+          ¿Funciona en cualquier celular, iPhone y Android?
+          <svg class="faq-chevron" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="faq-answer">Sí. La mayoría de celulares modernos (iPhone desde el 7, y Android desde hace varios años) traen NFC activado por defecto. Si el celular de quien escanea no tiene NFC o lo tiene desactivado, siempre queda el código QR como respaldo — ninguno de los tres productos depende de una sola tecnología.</div>
+      </details>
+      <details class="faq-item">
+        <summary>
+          ¿Puedo actualizar la información después de activarla?
+          <svg class="faq-chevron" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="faq-answer">Sí, en cualquier momento y sin costo adicional. Cambia tu número o redes en la tarjeta personal, actualiza un contacto de emergencia en la identificación, o corrige el teléfono en la placa de tu mascota — el chip físico no cambia, solo lo que muestra.</div>
+      </details>
+      <details class="faq-item">
+        <summary>
+          <span class="faq-q-text">
+            <span class="faq-tag">Taptumi ID</span>
+            ¿Quién puede ver la información médica de emergencia?
+          </span>
+          <svg class="faq-chevron" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="faq-answer">Solo se muestra lo que tú decidas incluir (tipo de sangre, alergias, contactos de emergencia) a quien escanee el tag — pensado para que cualquier persona sin formación médica sepa cómo ayudar en una crisis, sin exponer más información de la necesaria.</div>
+      </details>
+      <details class="faq-item">
+        <summary>
+          <span class="faq-q-text">
+            <span class="faq-tag">Taptumi Pet</span>
+            ¿Qué pasa si la placa de mi mascota se daña o se pierde?
+          </span>
+          <svg class="faq-chevron" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="faq-answer">Escríbenos y gestionamos una placa de reemplazo — el perfil de tu mascota no se pierde, solo se vincula a la placa nueva.</div>
+      </details>
+      <details class="faq-item">
+        <summary>
+          ¿Cuánto cuesta y cómo lo pido?
+          <svg class="faq-chevron" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="faq-answer">Depende del producto y la cantidad que necesites. Escríbenos por WhatsApp contándonos qué buscas (personal, identificación o mascota) y te confirmamos precio y tiempos al instante.</div>
+      </details>
     </div>
   </section>
 

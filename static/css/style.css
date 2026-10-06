@@ -10,7 +10,7 @@
   --glow-teal: #14b8a6;
   --glow-indigo: #4c6fff;
 
-  --accent: #4c6fff;
+  --accent: #25d366;
   --accent-dim: #4c6fff33;
   --whatsapp: #25d366;
   --danger: #ff453a;
@@ -36,6 +36,46 @@
   --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Inter, system-ui, sans-serif;
   --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Inter, system-ui, sans-serif;
   --font-mono: "SF Mono", Menlo, monospace;
+  --sticky-cta-bg: rgba(5, 11, 24, 0.332);
+  --toast-bg: rgba(5, 11, 24, 0.92);
+  --toast-color: #f5f7fa;
+  --carousel-btn-bg: rgba(5, 11, 24, 0.55);
+  --carousel-btn-bg-hover: rgba(5, 11, 24, 0.85);
+  --lightbox-bg: rgba(2, 5, 12, 0.94);
+}
+
+/* ============================================================
+   TEMA CLARO
+   Se activa con <html data-theme="light">
+   ============================================================ */
+[data-theme="light"] {
+  --bg-deep: #f7f9fc;
+  --bg-mid: #eef2f9;
+  --glow-teal: #14b8a6;
+  --glow-indigo: #4c6fff;
+
+  --accent: #3b5bff;
+  --accent-dim: #3b5bff22;
+  --whatsapp: #1faa4f;
+  --danger: #d92d20;
+  --danger-dim: #d92d2014;
+  --success: #16a34a;
+  --success-dim: #16a34a14;
+
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-bg-strong: rgba(255, 255, 255, 0.95);
+  --glass-bg-soft: rgba(255, 255, 255, 0.5);
+  --glass-border: rgba(20, 40, 80, 0.18);
+
+  --text-primary: #0f1e3d;
+  --text-secondary: rgba(15, 30, 61, 0.75);
+  --text-faint: rgba(15, 30, 61, 0.45);
+  --sticky-cta-bg: rgba(255, 255, 255, 0.85);
+  --toast-bg: rgba(15, 30, 61, 0.92);
+  --toast-color: #ffffff;
+  --carousel-btn-bg: rgba(255, 255, 255, 0.75);
+  --carousel-btn-bg-hover: rgba(255, 255, 255, 0.95);
+  --lightbox-bg: rgba(15, 30, 61, 0.92);
 }
 
 * { box-sizing: border-box; }
@@ -64,6 +104,11 @@ body::before {
   filter: blur(10px);
 }
 
+[data-theme="light"] body::before {
+  opacity: 0.28;
+  filter: blur(20px);
+}
+
 h1, h2, h3 { font-family: var(--font-display); margin: 0; letter-spacing: -0.01em; }
 p { margin: 0; }
 a { color: inherit; }
@@ -77,7 +122,7 @@ a { color: inherit; }
   display: flex; gap: 10px; align-items: center;
   max-width: 460px; margin: 0 auto;
   padding: 14px 20px calc(14px + env(safe-area-inset-bottom, 0px));
-  background: rgba(5, 11, 24, 0.332);
+  background: var(--sticky-cta-bg);
   backdrop-filter: blur(22px) saturate(160%);
   -webkit-backdrop-filter: blur(22px) saturate(160%);
   border-radius: 30px;
@@ -92,7 +137,7 @@ a { color: inherit; }
 .share-toast {
   position: fixed; left: 50%; bottom: calc(96px + env(safe-area-inset-bottom, 0px));
   transform: translate(-50%, 8px);
-  background: rgba(5, 11, 24, 0.92); color: var(--text-primary);
+  background: var(--toast-bg);color: var(--toast-color);
   border: 1px solid var(--glass-border); border-radius: var(--radius-pill);
   padding: 10px 18px; font-size: 13px; font-weight: 600;
   opacity: 0; pointer-events: none; z-index: 50;
@@ -136,7 +181,7 @@ a { color: inherit; }
 
 .btn-primary, .btn-save, .btn-save-contact {
   width: 100%; background: var(--accent); border-color: var(--accent); color: #fff;
-  box-shadow: 0 6px 20px rgba(76, 111, 255, 0.35);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3);
 }
 .btn-secondary, .btn-cancel { width: 100%; background: transparent; color: var(--text-secondary); }
 .btn-preview { padding: 9px 16px; font-size: 13px; background: transparent; color: var(--accent); border-color: var(--accent-dim); }
@@ -310,16 +355,24 @@ input:focus, textarea:focus { outline: none; border-color: var(--accent); box-sh
 }
 .social-dock-item {
   display: flex; align-items: center; justify-content: center;
-  transition: transform 0.15s ease;
+  transition: transform 0.15s ease; text-decoration: none;
 }
 .social-dock-item:hover { transform: translateY(-3px); }
 .social-dock-item:active { transform: scale(0.94); }
 .social-dock-item .social-icon { transition: filter 0.15s ease, transform 0.15s ease; }
 .social-dock-item:hover .social-icon { filter: brightness(1.15); }
 .social-icon {
-  width: 48px; height: 48px; display: inline-flex; align-items: center; justify-content: center;
-  border-radius: var(--radius-sm); font-size: 26px; color: #fff; background: var(--glass-bg-strong);
-  flex-shrink: 0; transition: transform 0.15s ease; line-height: 1;
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  font-size: 26px;
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+  line-height: 1;
+  overflow: hidden; 
 }
 .social-icon i {
   width: 100%;
@@ -331,23 +384,65 @@ input:focus, textarea:focus { outline: none; border-color: var(--accent); box-sh
 }
 .social-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-.social-link .fa-instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
-.social-link .fa-facebook-f { background: #1877f2; }
-.social-link .fa-x-twitter { background: #000; }
-.social-link .fa-linkedin-in { background: #0a66c2; }
-.social-link .fa-tiktok { background: #000; }
-.social-link .fa-youtube { background: #ff0000; }
-.social-link .fa-whatsapp { background: #25d366; }
-.social-link .fa-spotify { background: #1db954; }
-.social-link .fa-github { background: #181717; }
-.social-link .fa-behance { background: #1769ff; }
-.social-link .fa-dribbble { background: #ea4c89; }
-.social-link .fa-pinterest { background: #bd081c; }
-.social-link .fa-telegram { background: #26a5e4; }
+/* ============ Colores de marca para iconos de redes ====== */
+.social-icon .fa-instagram,
+.social-link .fa-instagram {
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  color: #fff;
+}
+.social-icon .fa-facebook-f,
+.social-link .fa-facebook-f { background: #1877f2; color: #fff; }
+
+.social-icon .fa-x-twitter,
+.social-link .fa-x-twitter { background: #000; color: #fff; }
+
+.social-icon .fa-linkedin-in,
+.social-link .fa-linkedin-in { background: #0a66c2; color: #fff; }
+
+.social-icon .fa-tiktok,
+.social-link .fa-tiktok { background: #000; color: #fff; }
+
+.social-icon .fa-youtube,
+.social-link .fa-youtube { background: #ff0000; color: #fff; }
+
+.social-icon .fa-whatsapp,
+.social-link .fa-whatsapp { background: #25d366; color: #fff; }
+
+.social-icon .fa-spotify,
+.social-link .fa-spotify { background: #1db954; color: #fff; }
+
+.social-icon .fa-github,
+.social-link .fa-github { background: #181717; color: #fff; }
+
+.social-icon .fa-behance,
+.social-link .fa-behance { background: #1769ff; color: #fff; }
+
+.social-icon .fa-dribbble,
+.social-link .fa-dribbble { background: #ea4c89; color: #fff; }
+
+.social-icon .fa-pinterest,
+.social-link .fa-pinterest { background: #bd081c; color: #fff; }
+
+.social-icon .fa-telegram,
+.social-link .fa-telegram { background: #26a5e4; color: #fff; }
+
+.social-icon .fa-snapchat,
 .social-link .fa-snapchat { background: #fffc00; color: #000; }
-.social-link .fa-envelope { background: #ea4335; }
-.social-link .fa-phone { background: #25d366; }
-.icon-globe, .icon-link, .icon-default { background: var(--glass-bg-strong); }
+
+.social-icon .fa-envelope,
+.social-link .fa-envelope { background: #ea4335; color: #fff; }
+
+.social-icon .fa-phone,
+.social-link .fa-phone { background: #25d366; color: #fff; }
+
+/* Iconos sin marca → fondo neutro que respeta el tema */
+.social-icon .fa-globe,
+.social-icon .fa-link,
+.social-link .fa-globe,
+.social-link .fa-link {
+  background: var(--glass-bg-strong);
+  color: var(--text-primary);
+}
 
 .gallery-section { margin-bottom: 22px; }
 .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
@@ -458,12 +553,12 @@ input:focus, textarea:focus { outline: none; border-color: var(--accent); box-sh
 }
 .carousel-btn {
   position: absolute; top: 50%; transform: translateY(-50%);
-  background: rgba(5, 11, 24, 0.55); color: #fff; border: 1px solid var(--glass-border);
+  background: var(--carousel-btn-bg); color: #fff; border: 1px solid var(--glass-border);
   width: 42px; height: 42px; border-radius: 50%; font-size: 22px; cursor: pointer;
   z-index: 2; display: flex; align-items: center; justify-content: center;
   backdrop-filter: blur(6px); transition: background 0.2s, transform 0.15s;
 }
-.carousel-btn:hover { background: rgba(5, 11, 24, 0.85); transform: translateY(-50%) scale(1.08); }
+.carousel-btn:hover { background: var(--carousel-btn-bg-hover); transform: translateY(-50%) scale(1.08); }
 .carousel-btn:active { transform: translateY(-50%) scale(0.95); }
 .carousel-btn.prev { left: 12px; }
 .carousel-btn.next { right: 12px; }
@@ -475,7 +570,7 @@ input:focus, textarea:focus { outline: none; border-color: var(--accent); box-sh
 .carousel-dot.active { background: var(--accent); transform: scale(1.25); }
 
 .lightbox-overlay {
-  display: none; position: fixed; inset: 0; background: rgba(2, 5, 12, 0.94);
+  display: none; position: fixed; inset: 0; background: var(--lightbox-bg);
   z-index: 1000; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease;
 }
 .lightbox-overlay.active { display: flex; opacity: 1; }
@@ -514,3 +609,128 @@ input:focus, textarea:focus { outline: none; border-color: var(--accent); box-sh
   .edit-header { flex-direction: column; align-items: flex-start; }
   .gallery-admin-grid { grid-template-columns: repeat(3, 1fr); }
 }
+/* ============ Superadmin ============ */
+.sa-profile-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--glass-border);
+    flex-wrap: wrap;
+}
+.sa-profile-row:last-child { border-bottom: none; }
+
+.sa-profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 180px;
+}
+.sa-profile-info strong { font-size: 15px; }
+.sa-profile-info small { font-size: 12px; color: var(--text-secondary); }
+
+.sa-profile-actions {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.sa-profile-actions .btn {
+    padding: 8px 12px;
+    font-size: 12px;
+    width: auto;
+}
+
+.sa-status {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: var(--radius-pill);
+    display: inline-block;
+    margin-top: 2px;
+    align-self: flex-start;
+}
+.sa-ok { background: var(--success-dim); color: #a9f2bb; }
+.sa-warn { background: rgba(255, 193, 7, 0.15); color: #ffd866; }
+.sa-locked { background: var(--danger-dim); color: #ffb4af; }
+
+/* ============ Botón "olvidé mi contraseña" ============ */
+.btn-forgot {
+    display: block;
+    width: 100%;
+    margin-top: 16px;
+    padding: 12px;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    transition: color 0.15s ease;
+}
+.btn-forgot:hover { color: var(--accent); text-decoration: underline; }
+
+/* ============ Panel superadmin — solicitudes ============ */
+.sa-count {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+    background: var(--danger-dim);
+    color: #ffb4af;
+}
+
+.sa-request-card {
+    padding: 14px;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    background: var(--glass-bg-soft);
+}
+.sa-request-card:last-child { margin-bottom: 0; }
+
+/* ============ Toggle de tema ============ */
+.theme-toggle {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--glass-bg-strong);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: var(--text-primary);
+    cursor: pointer;
+    font-size: 18px;
+    z-index: 50;
+    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    padding: 0;
+    line-height: 1;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.08);
+    border-color: var(--accent);
+}
+
+.theme-toggle:active {
+    transform: scale(0.95);
+}
+
+/* Mostrar un icono u otro según el tema activo */
+.theme-icon-light { display: none; }          /* oculto por defecto (dark) */
+.theme-icon-dark  { display: inline; }
+
+body.theme-light-active .theme-icon-light { display: inline; }
+body.theme-light-active .theme-icon-dark  { display: none; }

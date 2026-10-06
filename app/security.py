@@ -46,3 +46,47 @@ def clean_slug(raw_slug: str) -> str:
     slug = re.sub(r"[^a-z0-9-]", "-", slug)
     slug = re.sub(r"-+", "-", slug).strip("-")
     return slug
+# ---------- Bloqueo por intentos fallidos ----------
+from datetime import datetime, timedelta, timezone
+
+MAX_FAILED_ATTEMPTS = 5
+LOCK_DURATION_MINUTES = 15
+
+
+def now_utc() -> datetime:
+    return datetime.now(timezone.utc)
+
+
+def is_locked(locked_until_iso) -> bool:
+    """¿Sigue vigente el bloqueo?"""
+    if not locked_until_iso:
+        return False
+    try:
+        lock_dt = datetime.fromisoformat(locked_until_iso)
+        # Normalizar por si el string no tiene tzinfo
+        if lock_dt.tzinfo is None:
+            lock_dt = lock_dt.replace(tzinfo=timezone.utc)
+    except (ValueError, TypeError):
+        return False
+    return now_utc() < lock_dt
+
+
+def remaining_lock_minutes(locked_until_iso) -> int:
+    """Cuántos minutos faltan para que expire el bloqueo (0 si ya expiró)."""
+    if not locked_until_iso:
+        return 0
+    try:
+        lock_dt = datetime.fromisoformat(locked_until_iso)
+        if lock_dt.tzinfo is None:
+            lock_dt = lock_dt.replace(tzinfo=timezone.utc)
+    except (ValueError, TypeError):
+        return 0
+    delta = lock_dt - now_utc()
+    if delta.total_seconds() <= 0:
+        return 0
+    return max(1, int(delta.total_seconds() // 60) + 1)
+
+
+def next_lock_timestamp() -> str:
+    """ISO timestamp de cuándo expira un nuevo bloqueo."""
+    return (now_utc() + timedelta(minutes=LOCK_DURATION_MINUTES)).isoformat()

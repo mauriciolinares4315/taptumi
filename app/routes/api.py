@@ -1,6 +1,7 @@
 """Rutas API (JSON) consumidas por los templates via fetch()."""
 import uuid
 import os
+import logging
 
 from flask import Blueprint, jsonify, request, session
 
@@ -8,10 +9,14 @@ from app.config import config
 from app.db import get_db
 from app.extensions import limiter
 from app.security import (
-    clean_slug,
+    verify_password,
     hash_password,
     is_legacy_plaintext,
-    verify_password,
+    is_locked,
+    remaining_lock_minutes,
+    next_lock_timestamp,
+    MAX_FAILED_ATTEMPTS,
+    LOCK_DURATION_MINUTES,
 )
 from app.utils import allowed_file
 
@@ -35,30 +40,100 @@ api_bp = Blueprint("api", __name__, url_prefix="/api")
 
 
 def _profile_password_matches(slug: str, candidate_password: str) -> bool:
-    """Confirma que candidate_password corresponde al perfil `slug`, migrando
-    contrasenas viejas en texto plano a hash sobre la marcha si aplica."""
+    """
+    Verificación simple (sin contar intentos ni bloquear).
+    Uso interno: endpoints ya autenticados (update_profile, upload_image).
+    Para el LOGIN usar `_check_login_and_update`.
+    """
     if not slug or not candidate_password:
         return False
-
     db = get_db()
-    row = db.fetchone(db.execute("SELECT password FROM profiles WHERE slug = ?", (slug,)))
-    if not row:
+    try:
+        row = db.fetchone(
+            db.execute("SELECT password FROM profiles WHERE slug = ?", (slug,))
+        )
+        if not row:
+            return False
+        return verify_password(candidate_password, row[0])
+    finally:
         db.close()
-        return False
 
-    stored = row[0]
-    ok = verify_password(candidate_password, stored)
 
-    if ok and is_legacy_plaintext(stored):
+def _check_login_and_update(slug: str, candidate_password: str) -> dict:
+    """
+    Verifica credenciales y maneja bloqueo por intentos fallidos.
+    Solo para el endpoint de LOGIN.
+
+    Retorna:
+      {"ok": True}
+      {"ok": False, "reason": "wrong_password", "attempts_left": N}
+      {"ok": False, "reason": "locked", "minutes": N}
+      {"ok": False, "reason": "not_found"}
+    """
+    db = get_db()
+    try:
+        row = db.fetchone(
+            db.execute(
+                "SELECT password, failed_attempts, locked_until FROM profiles WHERE slug = ?",
+                (slug,),
+            )
+        )
+        if not row:
+            return {"ok": False, "reason": "not_found"}
+
+        stored = row[0]
+        failed_attempts = row[1] or 0
+        locked_until = row[2]
+
+        # 1) ¿Bloqueado todavía?
+        if is_locked(locked_until):
+            return {
+                "ok": False,
+                "reason": "locked",
+                "minutes": remaining_lock_minutes(locked_until),
+            }
+
+        # 2) ¿Contraseña correcta?
+        if verify_password(candidate_password, stored):
+            db.execute(
+                "UPDATE profiles SET failed_attempts = 0, locked_until = NULL WHERE slug = ?",
+                (slug,),
+            )
+            if is_legacy_plaintext(stored):
+                db.execute(
+                    "UPDATE profiles SET password = ? WHERE slug = ?",
+                    (hash_password(candidate_password), slug),
+                )
+            db.commit()
+            return {"ok": True}
+
+        # 3) Contraseña incorrecta → incrementar contador
+        failed_attempts += 1
+
+        if failed_attempts >= MAX_FAILED_ATTEMPTS:
+            db.execute(
+                "UPDATE profiles SET failed_attempts = ?, locked_until = ? WHERE slug = ?",
+                (failed_attempts, next_lock_timestamp(), slug),
+            )
+            db.commit()
+            return {
+                "ok": False,
+                "reason": "locked",
+                "minutes": LOCK_DURATION_MINUTES,
+            }
+
         db.execute(
-            "UPDATE profiles SET password = ? WHERE slug = ?",
-            (hash_password(candidate_password), slug),
+            "UPDATE profiles SET failed_attempts = ? WHERE slug = ?",
+            (failed_attempts, slug),
         )
         db.commit()
-
-    db.close()
-    return ok
-
+        return {
+            "ok": False,
+            "reason": "wrong_password",
+            "attempts_left": MAX_FAILED_ATTEMPTS - failed_attempts,
+        }
+    finally:
+        db.close()
 
 @api_bp.route("/profile/<slug>")
 def get_profile(slug):
@@ -105,14 +180,39 @@ def get_profile(slug):
 @api_bp.route("/validate-password/<slug>", methods=["POST"])
 @limiter.limit(config.RATELIMIT_LOGIN)
 def validate_password(slug):
-    """Validar la contrasena de administracion de un perfil."""
+    """Valida la contraseña de un perfil. Aplica bloqueo tras N intentos fallidos."""
     data = request.get_json(silent=True) or {}
     password = data.get("password", "")
 
-    if _profile_password_matches(slug, password):
-        return jsonify({"valid": True}), 200
-    return jsonify({"valid": False, "error": "Contrasena incorrecta"}), 401
+    if not slug or not password:
+        return jsonify({"valid": False, "error": "Datos incompletos"}), 400
 
+    result = _check_login_and_update(slug, password)
+
+    if result["ok"]:
+        return jsonify({"valid": True}), 200
+
+    reason = result.get("reason")
+
+    if reason == "not_found":
+        return jsonify({"valid": False, "error": "Perfil no encontrado"}), 404
+
+    if reason == "locked":
+        minutos = result.get("minutes", 15)
+        return jsonify({
+            "valid": False,
+            "locked": True,
+            "error": f"Cuenta bloqueada por demasiados intentos fallidos. Intenta de nuevo en {minutos} minuto(s).",
+            "minutes": minutos,
+        }), 429
+
+    # wrong_password
+    left = result.get("attempts_left", 0)
+    return jsonify({
+        "valid": False,
+        "error": f"Contraseña incorrecta. Te quedan {left} intento(s).",
+        "attempts_left": left,
+    }), 401
 
 @api_bp.route("/profile/<slug>", methods=["POST"])
 @limiter.limit(config.RATELIMIT_LOGIN)
@@ -312,3 +412,45 @@ def upload_image():
     file.seek(0)
     file.save(filepath)
     return jsonify({"url": f"/static/uploads/{filename}"})
+
+# ---------- Solicitudes de recuperación de contraseña ----------
+
+@api_bp.route("/forgot-password/<slug>", methods=["POST"])
+@limiter.limit("5 per hour")
+def forgot_password(slug):
+    """Registra una solicitud de reset y avisa al admin por Telegram."""
+    data = request.get_json(silent=True) or {}
+    name = (data.get("name") or "").strip()
+    contact = (data.get("contact") or "").strip()
+    message = (data.get("message") or "").strip()
+
+    if not name or not contact:
+        return jsonify({"error": "Nombre y contacto son obligatorios"}), 400
+
+    if len(name) > 100 or len(contact) > 200 or len(message) > 500:
+        return jsonify({"error": "Datos demasiado largos"}), 400
+
+    db = get_db()
+    try:
+        row = db.fetchone(db.execute("SELECT 1 FROM profiles WHERE slug = ?", (slug,)))
+        if not row:
+            return jsonify({"error": "Perfil no encontrado"}), 404
+
+        db.execute(
+            """INSERT INTO password_reset_requests
+               (slug, name, contact, message, resolved)
+               VALUES (?, ?, ?, ?, 0)""",
+            (slug, name, contact, message),
+        )
+        db.commit()
+    finally:
+        db.close()
+
+    from app.notify import notify_admin_solicitud_reset
+    enviado = notify_admin_solicitud_reset(slug, name, contact, message)
+    logging.warning(
+        f"SOLICITUD RESET | slug={slug} | name={name} | contact={contact} "
+        f"| telegram={enviado}"
+    )
+
+    return jsonify({"success": True}), 200

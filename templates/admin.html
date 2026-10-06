@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <div class="page-container">
+     <div class="page-container">
         <!-- Login -->
         <div id="login-section">
             <div class="glass-card fade-in" style="margin-top:40px;">
@@ -20,6 +20,34 @@
                     </div>
                     <button onclick="login()" class="btn btn-primary">Acceder</button>
                     <p id="login-error" class="error-msg">Contraseña incorrecta</p>
+                </div>
+            </div>
+            <!-- NUEVO: botón olvidé contraseña -->
+            <button type="button" class="btn-forgot" onclick="showForgotForm()">¿Olvidaste tu contraseña?</button>
+
+            <!-- NUEVO: formulario de solicitud (oculto) -->
+                <div id="forgot-section" style="display:none;">
+                    <div class="glass-card" style="margin-top:16px;">
+                        <h3 class="form-card-title" style="text-align:center;">Solicitar restablecer contraseña</h3>
+                        <p class="input-hint" style="text-align:center; margin-bottom:14px;">
+                            Envía tu solicitud y te contactaremos para darte acceso.
+                        </p>
+                        <div class="form-group">
+                            <label>Tu nombre</label>
+                            <input type="text" id="forgot-name" class="input-field" placeholder="Ej: Juan Pérez" maxlength="100">
+                        </div>
+                        <div class="form-group">
+                            <label>Tu WhatsApp o email</label>
+                            <input type="text" id="forgot-contact" class="input-field" placeholder="573001234567 o tu@email.com" maxlength="200">
+                        </div>
+                        <div class="form-group">
+                            <label>Mensaje (opcional)</label>
+                            <textarea id="forgot-message" class="input-field" rows="2" placeholder="Cuéntanos qué pasó..." maxlength="500"></textarea>
+                        </div>
+                        <button onclick="sendForgotRequest()" class="btn btn-primary">Enviar solicitud</button>
+                        <button type="button" onclick="hideForgotForm()" class="btn btn-cancel" style="margin-top:8px;">Cancelar</button>
+                        <p id="forgot-msg" class="save-msg" style="display:none;"></p>
+                    </div>
                 </div>
             </div>
              <!-- ✅ Botón volver al perfil (solo visible en pantalla de login) -->
@@ -163,44 +191,57 @@
 
         // ===================== LOGIN =====================
         async function login() {
-            const password = document.getElementById('password-input').value;
-            const errorMsg = document.getElementById('login-error');
-            errorMsg.style.display = 'none';
+        const password = document.getElementById('password-input').value;
+        const errorMsg = document.getElementById('login-error');
+        errorMsg.style.display = 'none';
 
-            if (!password) {
-                errorMsg.textContent = '❌ Ingresa la contraseña';
+        if (!password) {
+            errorMsg.textContent = '❌ Ingresa la contraseña';
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        try {
+            const res = await fetch(`/api/profile/${SLUG}`);
+            if (!res.ok) {
+                errorMsg.textContent = '❌ Perfil no encontrado';
                 errorMsg.style.display = 'block';
                 return;
             }
+            profileData = await res.json();
 
-            try {
-                const res = await fetch(`/api/profile/${SLUG}`);
-                if (!res.ok) {
-                    errorMsg.textContent = '❌ Perfil no encontrado';
-                    errorMsg.style.display = 'block';
-                    return;
-                }
-                profileData = await res.json();
+            const validateRes = await fetch(`/api/validate-password/${SLUG}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password: password })
+            });
 
-                const validateRes = await fetch(`/api/validate-password/${SLUG}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password: password })
-                });
+            if (validateRes.ok) {
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('edit-section').style.display = 'block';
+                loadProfileData(password);
+                loadStats();
+            } else {
+                let errData = {};
+                try { errData = await validateRes.json(); } catch (e) {}
 
-                if (validateRes.ok) {
-                    document.getElementById('login-section').style.display = 'none';
-                    document.getElementById('edit-section').style.display = 'block';
-                    loadProfileData(password);
-                    loadStats();
+                errorMsg.style.display = 'block';
+
+                if (errData.locked) {
+                    errorMsg.textContent = '🔒 ' + (errData.error || 'Cuenta bloqueada');
+                } else if (errData.error) {
+                    errorMsg.textContent = '❌ ' + errData.error;
                 } else {
                     errorMsg.textContent = '❌ Contraseña incorrecta';
-                    errorMsg.style.display = 'block';
                 }
-            } catch (e) {
-                errorMsg.textContent = '❌ Error de conexión';
-                errorMsg.style.display = 'block';
+
+                document.getElementById('password-input').value = '';
+                document.getElementById('password-input').focus();
             }
+        } catch (e) {
+            errorMsg.textContent = '❌ Error de conexión';
+            errorMsg.style.display = 'block';
+        }
         }
 
         // ===================== LOAD PROFILE DATA =====================
@@ -463,6 +504,59 @@
         document.getElementById('password-input').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') login();
         });
+
+            function showForgotForm() {
+            document.getElementById('forgot-section').style.display = 'block';
+            document.getElementById('forgot-msg').style.display = 'none';
+        }
+
+        function hideForgotForm() {
+            document.getElementById('forgot-section').style.display = 'none';
+            document.getElementById('forgot-name').value = '';
+            document.getElementById('forgot-contact').value = '';
+            document.getElementById('forgot-message').value = '';
+        }
+
+        async function sendForgotRequest() {
+            const name = document.getElementById('forgot-name').value.trim();
+            const contact = document.getElementById('forgot-contact').value.trim();
+            const message = document.getElementById('forgot-message').value.trim();
+            const msgEl = document.getElementById('forgot-msg');
+
+            if (!name || !contact) {
+                msgEl.className = 'error-msg';
+                msgEl.textContent = '❌ Nombre y forma de contacto son obligatorios';
+                msgEl.style.display = 'block';
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/forgot-password/${SLUG}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, contact, message })
+                });
+
+                if (res.ok) {
+                    document.getElementById('forgot-section').innerHTML =
+                        '<div class="glass-card" style="margin-top:16px; text-align:center;">' +
+                        '<p style="font-size:32px; margin-bottom:8px;">✅</p>' +
+                        '<p style="font-weight:600; margin-bottom:6px;">Solicitud enviada</p>' +
+                        '<p class="input-hint">Te contactaremos pronto para darte acceso.</p>' +
+                        '</div>';
+                } else {
+                    const err = await res.json().catch(() => ({}));
+                    msgEl.className = 'error-msg';
+                    msgEl.textContent = '❌ ' + (err.error || 'Error al enviar');
+                    msgEl.style.display = 'block';
+                }
+            } catch (e) {
+                msgEl.className = 'error-msg';
+                msgEl.textContent = '❌ Error de conexión';
+                msgEl.style.display = 'block';
+            }
+        } 
+                    
     </script>
 </body>
 </html>
