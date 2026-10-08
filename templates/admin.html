@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administrar perfil</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-     <div class="page-container">
+        <a href="/c/{{ slug }}" class="back-floating" aria-label="Volver al perfil">⬅volver</a>
         <!-- Login -->
-        <div id="login-section">
+        <div id="login-section" class="admin-login-container">
             <div class="glass-card fade-in" style="margin-top:40px;">
                 <h1 class="login-title">Administrar perfil</h1>
                 <p class="login-subtitle">Ingresa la contraseña para editar tu perfil</p>
@@ -50,8 +51,6 @@
                     </div>
                 </div>
             </div>
-             <!-- ✅ Botón volver al perfil (solo visible en pantalla de login) -->
-            <a href="/c/{{ slug }}" class="btn btn-back-profile">← Volver al perfil</a>
         </div>
 
         <!-- Panel de edicion -->
@@ -59,7 +58,6 @@
            <div class="edit-header">
              <h1>Editar perfil</h1>
                 <div class="edit-header-actions">
-                    <a href="/c/{{ slug }}" class="back-floating" aria-label="Volver al perfil">← Volver </a>
                     <a id="preview-link" href="/c/{{ slug }}" target="_blank" class="btn btn-preview">👁️ Ver perfil público</a>
                 </div>
             </div>

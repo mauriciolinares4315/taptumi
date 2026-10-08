@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Taptumi — Identidad digital al toque</title>
+<link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
 <meta name="description" content="Taptumi crea identidad digital activada por NFC: tarjetas de presentación, identificación de personas y de mascotas. Un toque y ya está.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -267,10 +268,9 @@
   }
   .story-icon {
     width: 64px; height: 64px; border-radius: 20px;
-    background: linear-gradient(135deg, var(--glow-teal), var(--glow-indigo));
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
-  .story-icon svg { width: 28px; height: 28px; fill: #fff; }
+  .story-icon img { width:auto; height: 70px; fill: #ffffff63; }
   .story p { color: var(--text-secondary); font-size: 16.5px; line-height: 1.75; }
   .story strong { color: var(--text-primary); }
 
@@ -386,7 +386,7 @@
   <div class="nav-inner">
     <a href="#top" class="brand">
     <span class="brand-mark">
-    <img src="/static/img/taptumi_logo_icon_blanco.png" alt="Taptumi">
+    <img src="/static/img/taptumi_logo_navbar.png" alt="Taptumi">
     </span>
     Taptumi
     </a>
@@ -401,7 +401,7 @@
 
 <section class="hero">
   <div class="hero-logo">
-    <img src="/static/img/taptumi_logo_full_blanco.png" alt="Taptumi">
+    <img src="/static/img/taptumi_logo_full_verde.png" alt="Taptumi">
   </div>
     <span class="hero-eyebrow">Identidad digital tecnologia NFC
     </span>
@@ -528,7 +528,8 @@
   <section id="historia">
     <div class="story">
       <div class="story-icon">
-        <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M349.4 44.6c5.9-13.7 1.5-29.7-10.6-38.5s-28.6-8-39.9 1.8l-256 224c-10 8.8-13.6 22.9-9 35.3S50.7 288 64 288H175.5L98.6 467.4c-5.9 13.7-1.5 29.7 10.6 38.5s28.6 8 39.9-1.8l256-224c10-8.8 13.6-22.9 9-35.3s-16.4-20.7-29.7-20.7H272.5L349.4 44.6z"/></svg>
+        <img src="/static/img/taptumi_logo_navbar.png" alt="Vista previa de Taptumi Card">
+        <!--<svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M349.4 44.6c5.9-13.7 1.5-29.7-10.6-38.5s-28.6-8-39.9 1.8l-256 224c-10 8.8-13.6 22.9-9 35.3S50.7 288 64 288H175.5L98.6 467.4c-5.9 13.7-1.5 29.7 10.6 38.5s28.6 8 39.9-1.8l256-224c10-8.8 13.6-22.9 9-35.3s-16.4-20.7-29.7-20.7H272.5L349.4 44.6z"/></svg>-->
       </div>
       <p>Taptumi nació en Bucaramanga con una idea simple: <strong>la información importante no debería estar guardada donde nadie la ve.</strong> Empezamos con tarjetas de presentación digital, y al ver cuánto ayudaba tener los datos de contacto de emergencia a un toque de distancia, lo llevamos a identificación de personas y mascotas. Seguimos construyendo esto como un emprendimiento local — si tienes ideas, preguntas o quieres una tarjeta propia, escríbenos.</p>
     </div>

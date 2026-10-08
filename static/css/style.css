@@ -244,23 +244,22 @@ a { color: inherit; }
 
 .back-floating {
     position: fixed;
-    top: 16px; left: 16px;
-    width: 42px; height: 42px;
+    top: 16px; right: 16px;
+    width:fit-content; height: auto; padding: 7px;
     display: flex; align-items: center; justify-content: center;
-    background: rgba(5, 11, 24, 0.7);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border);
-    border-radius: 50%;
+    background:var(--glass-bg);
+    backdrop-filter: var(--backdrop-filter);
+    border: 0.5px solid var(--glass-border);
+    border-radius: var(--radius-pill);
     color: var(--text-primary);
-    font-size: 20px;
+    font-size: 14px;
     text-decoration: none;
     z-index: 30;
     transition: transform 0.15s ease, background 0.15s ease;
 }
 .back-floating:hover {
     transform: scale(1.05);
-    background: rgba(5, 11, 24, 0.95);
+    background:var(--glass-bg-strong);
 }
 /* Formularios */
 label, .form-group label {
@@ -355,7 +354,7 @@ input:focus, textarea:focus { outline: none; border-color: var(--accent); box-sh
 }
 .social-dock-item {
   display: flex; align-items: center; justify-content: center;
-  transition: transform 0.15s ease; text-decoration: none;
+  transition: transform 0.15s ease;text-decoration: none;
 }
 .social-dock-item:hover { transform: translateY(-3px); }
 .social-dock-item:active { transform: scale(0.94); }
@@ -462,7 +461,8 @@ input:focus, textarea:focus { outline: none; border-color: var(--accent); box-sh
 .footer-copyright a:hover {text-decoration: underline;}
 
 /* Admin */
-.edit-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+.admin-login-container {padding: 20px;}
+.edit-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 20px; }
 .edit-header h1 { font-size: 23px; font-weight: 700; }
 .form-card { margin-bottom: 16px; }
 .form-card-title { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); margin: 0 0 16px; font-weight: 700; }
