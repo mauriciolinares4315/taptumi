@@ -273,6 +273,20 @@
   .story-icon img { width:auto; height: 70px; fill: #ffffff63; }
   .story p { color: var(--text-secondary); font-size: 16.5px; line-height: 1.75; }
   .story strong { color: var(--text-primary); }
+  /* ---------- Donación: una porción de comida por cada tarjeta o placa ---------- */
+  .story-text { display: flex; flex-direction: column; gap: 20px; }
+  .story-impact {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding-top: 20px; border-top: 1px solid var(--glass-border);
+    font-size: 15px; line-height: 1.7; color: var(--text-secondary);
+  }
+  .story-impact svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 4px; fill: var(--glow-teal); }
+  .story-impact strong { color: var(--text-primary); }
+  .product-note {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12.5px; line-height: 1.5; color: var(--text-faint);
+  }
+  .product-note svg { width: 14px; height: 14px; flex-shrink: 0; fill: var(--glow-teal); }
 
   /* ---------- Contacto ---------- */
   .contact-card {
@@ -496,6 +510,7 @@
           <h3>Identificación de mascotas</h3>
         </div>
         <p class="desc">Una placa NFC para el collar. Si tu mascota se pierde, quien la encuentre escanea y ve tu contacto al instante, sin depender de un microchip ni de terceros.</p>
+        <p class="product-note"><svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M226.5 92.9c14.3 42.9-.3 86.2-32.6 96.8s-70.1-15.6-84.4-58.5s.3-86.2 32.6-96.8s70.1 15.6 84.4 58.5zM100.4 198.6c18.9 32.4 14.3 70.1-10.2 84.1s-59.7-.9-78.5-33.3S-2.7 179.3 21.8 165.3s59.7 .9 78.5 33.3zM69.2 401.2C121.6 259.9 214.7 224 256 224s134.4 35.9 186.8 177.2c3.6 9.7 5.2 20.1 5.2 30.5v1.6c0 25.8-20.9 46.7-46.7 46.7c-11.5 0-22.9-1.4-34-4.2l-88-22c-15.3-3.8-31.3-3.8-46.6 0l-88 22c-11.1 2.8-22.5 4.2-34 4.2C84.9 480 64 459.1 64 433.3v-1.6c0-10.4 1.6-20.8 5.2-30.5zM421.8 282.7c-24.5-14-29.1-51.7-10.2-84.1s54-47.3 78.5-33.3s29.1 51.7 10.2 84.1s-54 47.3-78.5 33.3zM357.1 189.7c-32.3-10.6-46.9-53.9-32.6-96.8s52.1-69.1 84.4-58.5s46.9 53.9 32.6 96.8s-52.1 69.1-84.4 58.5z"/></svg>Con cada placa que entregamos, donamos una porción de comida a perritos rescatados.</p>
         <a href="#" class="product-link">Ver perfil de ejemplo <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg></a>
         </div>
     </div>
@@ -531,7 +546,13 @@
         <img src="/static/img/taptumi_logo_navbar.png" alt="Vista previa de Taptumi Card">
         <!--<svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M349.4 44.6c5.9-13.7 1.5-29.7-10.6-38.5s-28.6-8-39.9 1.8l-256 224c-10 8.8-13.6 22.9-9 35.3S50.7 288 64 288H175.5L98.6 467.4c-5.9 13.7-1.5 29.7 10.6 38.5s28.6 8 39.9-1.8l256-224c10-8.8 13.6-22.9 9-35.3s-16.4-20.7-29.7-20.7H272.5L349.4 44.6z"/></svg>-->
       </div>
-      <p>Taptumi nació en Bucaramanga con una idea simple: <strong>la información importante no debería estar guardada donde nadie la ve.</strong> Empezamos con tarjetas de presentación digital, y al ver cuánto ayudaba tener los datos de contacto de emergencia a un toque de distancia, lo llevamos a identificación de personas y mascotas. Seguimos construyendo esto como un emprendimiento local — si tienes ideas, preguntas o quieres una tarjeta propia, escríbenos.</p>
+      <div class="story-text">
+        <p>Taptumi nació en Bucaramanga con una idea simple: <strong>la información importante no debería estar guardada donde nadie la ve.</strong> Empezamos con tarjetas de presentación digital, y al ver cuánto ayudaba tener los datos de contacto de emergencia a un toque de distancia, lo llevamos a identificación de personas y mascotas. Seguimos construyendo esto como un emprendimiento local — si tienes ideas, preguntas o quieres una tarjeta propia, escríbenos.</p>
+        <p class="story-impact">
+        <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M226.5 92.9c14.3 42.9-.3 86.2-32.6 96.8s-70.1-15.6-84.4-58.5s.3-86.2 32.6-96.8s70.1 15.6 84.4 58.5zM100.4 198.6c18.9 32.4 14.3 70.1-10.2 84.1s-59.7-.9-78.5-33.3S-2.7 179.3 21.8 165.3s59.7 .9 78.5 33.3zM69.2 401.2C121.6 259.9 214.7 224 256 224s134.4 35.9 186.8 177.2c3.6 9.7 5.2 20.1 5.2 30.5v1.6c0 25.8-20.9 46.7-46.7 46.7c-11.5 0-22.9-1.4-34-4.2l-88-22c-15.3-3.8-31.3-3.8-46.6 0l-88 22c-11.1 2.8-22.5 4.2-34 4.2C84.9 480 64 459.1 64 433.3v-1.6c0-10.4 1.6-20.8 5.2-30.5zM421.8 282.7c-24.5-14-29.1-51.7-10.2-84.1s54-47.3 78.5-33.3s29.1 51.7 10.2 84.1s-54 47.3-78.5 33.3zM357.1 189.7c-32.3-10.6-46.9-53.9-32.6-96.8s52.1-69.1 84.4-58.5s46.9 53.9 32.6 96.8s-52.1 69.1-84.4 58.5z"/></svg>
+        <span><strong>Por cada tarjeta o placa Taptumi que entregamos, donamos una porción de comida</strong> a perritos rescatados.</span>
+       </p>
+      </div>
     </div>
   </section>
 
@@ -581,6 +602,13 @@
           <svg class="faq-chevron" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"/></svg>
         </summary>
         <div class="faq-answer">Escríbenos y gestionamos una placa de reemplazo — el perfil de tu mascota no se pierde, solo se vincula a la placa nueva.</div>
+      </details>
+      <details class="faq-item">
+        <summary>
+          ¿A quién apoyan y cómo?
+          <svg class="faq-chevron" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="faq-answer">Por cada tarjeta o placa Taptumi que entregamos, donamos una porción de comida a perritos rescatados. Si quieres saber cómo va el aporte, escríbenos y te contamos.</div>
       </details>
       <details class="faq-item">
         <summary>
