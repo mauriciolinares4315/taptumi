@@ -371,11 +371,18 @@
   }
 
   /* ---------- Footer ---------- */
-  footer { border-top: 1px solid var(--glass-border); padding: 32px 0; }
+  footer { border-top: 1px solid var(--glass-border); padding: 32px 0;text-align: center;}
   .footer-inner {
-    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+    display: flex; flex-direction: column; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
     font-size: 13px; color: var(--text-faint);
   }
+  @media (min-width: 768px) {
+  .footer-inner {
+    flex-direction: row;
+    justify-content: center; /* Mantiene el contenido centrado en la fila */
+    gap: 24px; /* Espacio horizontal si van en la misma línea */
+  }
+}
 
   @media (max-width: 860px) {
     .steps { grid-template-columns: 1fr; }
@@ -483,7 +490,15 @@
               <span class="product-tag">Taptumi Card</span>
               <h3>Presentación personal</h3>
             </div>
-            <p class="desc">Tu tarjeta de presentación digital: nombre, cargo, redes y forma de contacto. La persona la escanea y guarda tus datos al instante, sin escribir nada a mano.</p>
+            <p class="desc">Tu identidad profesional, a un toque de distancia
+
+                Deja atrás las formas convencionales de hacer contactos. Mientras el papel se archiva y se olvida, la tecnología de Taptumi te pone al alcance de la mano:
+
+                Todo en un solo lugar: Nombre, cargo, redes y accesos de contacto directos.
+
+                Cero tipeo manual: Se escanea y se guarda automáticamente en los contactos del teléfono en segundos.
+
+                Siempre disponible: Nunca más te quedes sin tarjetas físicas en el momento clave.</p>
             <!-- REEMPLAZAR con el link real del perfil de demostración -->
             <a href="https://taptumi-1065502193542.southamerica-east1.run.app/c/demo" class="product-link">Ver perfil de ejemplo <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg></a>
             </div>
@@ -496,7 +511,15 @@
           <span class="product-tag">Taptumi ID</span>
           <h3>Identificación de personas</h3>
         </div>
-        <p class="desc">Pensada para niños, adultos mayores o personas con condiciones médicas: al escanear, cualquiera puede ver contactos de emergencia, tipo de sangre, alergias y qué hacer en una crisis.</p>
+        <p class="desc">Protección inteligente para quienes más lo necesitan
+
+            Pensada para el cuidado de niños, adultos mayores y personas con condiciones médicas, nuestra identificación inteligente garantiza que los datos vitales nunca falten cuando el tiempo es lo más valioso:
+
+            Respuesta inmediata: Acceso instantáneo a contactos de emergencia mediante un simple escaneo.
+
+            Datos médicos esenciales: Visualización clara de tipo de sangre, alergias y condiciones particulares.
+
+            Protocolos de crisis: Instrucciones claras sobre qué hacer y cómo actuar en los momentos más críticos.</p>
         <!-- REEMPLAZAR con el link real del perfil de demostración -->
         <a href="#" class="product-link">Ver perfil de ejemplo <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg></a>
       </div>
@@ -509,7 +532,15 @@
           <span class="product-tag">Taptumi Pet</span>
           <h3>Identificación de mascotas</h3>
         </div>
-        <p class="desc">Una placa NFC para el collar. Si tu mascota se pierde, quien la encuentre escanea y ve tu contacto al instante, sin depender de un microchip ni de terceros.</p>
+        <p class="desc">El hogar, a un solo toque de distancia
+
+          Las placas tradicionales ya no son suficientes para garantizar el regreso seguro de tu mascota. Nuestra tecnología NFC ofrece ventajas reales frente a los métodos de siempre:
+
+          Sin intermediarios ni lectores: No requiere aparatos veterinarios ni bases de datos complejas; cualquier teléfono lee la placa.
+
+          Información siempre actualizada: Modifica tus datos de contacto cuando lo necesites sin tener que mandar a hacer una placa nueva.
+
+          Acceso instantáneo: Contacto directo y sin demoras entre quien encuentra a tu mascota y tú.</p>
         <p class="product-note"><svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M226.5 92.9c14.3 42.9-.3 86.2-32.6 96.8s-70.1-15.6-84.4-58.5s.3-86.2 32.6-96.8s70.1 15.6 84.4 58.5zM100.4 198.6c18.9 32.4 14.3 70.1-10.2 84.1s-59.7-.9-78.5-33.3S-2.7 179.3 21.8 165.3s59.7 .9 78.5 33.3zM69.2 401.2C121.6 259.9 214.7 224 256 224s134.4 35.9 186.8 177.2c3.6 9.7 5.2 20.1 5.2 30.5v1.6c0 25.8-20.9 46.7-46.7 46.7c-11.5 0-22.9-1.4-34-4.2l-88-22c-15.3-3.8-31.3-3.8-46.6 0l-88 22c-11.1 2.8-22.5 4.2-34 4.2C84.9 480 64 459.1 64 433.3v-1.6c0-10.4 1.6-20.8 5.2-30.5zM421.8 282.7c-24.5-14-29.1-51.7-10.2-84.1s54-47.3 78.5-33.3s29.1 51.7 10.2 84.1s-54 47.3-78.5 33.3zM357.1 189.7c-32.3-10.6-46.9-53.9-32.6-96.8s52.1-69.1 84.4-58.5s46.9 53.9 32.6 96.8s-52.1 69.1-84.4 58.5z"/></svg>Con cada placa que entregamos, donamos una porción de comida a perritos rescatados.</p>
         <a href="#" class="product-link">Ver perfil de ejemplo <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg></a>
         </div>
@@ -544,10 +575,9 @@
     <div class="story">
       <div class="story-icon">
         <img src="/static/img/taptumi_logo_navbar.png" alt="Vista previa de Taptumi Card">
-        <!--<svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M349.4 44.6c5.9-13.7 1.5-29.7-10.6-38.5s-28.6-8-39.9 1.8l-256 224c-10 8.8-13.6 22.9-9 35.3S50.7 288 64 288H175.5L98.6 467.4c-5.9 13.7-1.5 29.7 10.6 38.5s28.6 8 39.9-1.8l256-224c10-8.8 13.6-22.9 9-35.3s-16.4-20.7-29.7-20.7H272.5L349.4 44.6z"/></svg>-->
-      </div>
+        </div>
       <div class="story-text">
-        <p>Taptumi nació en Bucaramanga con una idea simple: <strong>la información importante no debería estar guardada donde nadie la ve.</strong> Empezamos con tarjetas de presentación digital, y al ver cuánto ayudaba tener los datos de contacto de emergencia a un toque de distancia, lo llevamos a identificación de personas y mascotas. Seguimos construyendo esto como un emprendimiento local — si tienes ideas, preguntas o quieres una tarjeta propia, escríbenos.</p>
+        <p>Taptumi nació en Bucaramanga con una premisa clara: <strong>lla información vital no debería estar oculta ni ser difícil de alcanzar.</strong> Lo que comenzó como un proyecto de tarjetas de presentación digital evolucionó de manera natural al darnos cuenta del impacto real que tiene llevar los datos de contacto y de emergencia a un solo toque de distancia. Hoy transformamos esa visión en soluciones de identificación inteligente para personas y mascotas. Seguimos construyendo este sueño desde el corazón de Santander, impulsados por la innovación local. ¿Tienes una idea, alguna pregunta o quieres tu propia tarjeta? Conversemos.</p>
         <p class="story-impact">
         <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M226.5 92.9c14.3 42.9-.3 86.2-32.6 96.8s-70.1-15.6-84.4-58.5s.3-86.2 32.6-96.8s70.1 15.6 84.4 58.5zM100.4 198.6c18.9 32.4 14.3 70.1-10.2 84.1s-59.7-.9-78.5-33.3S-2.7 179.3 21.8 165.3s59.7 .9 78.5 33.3zM69.2 401.2C121.6 259.9 214.7 224 256 224s134.4 35.9 186.8 177.2c3.6 9.7 5.2 20.1 5.2 30.5v1.6c0 25.8-20.9 46.7-46.7 46.7c-11.5 0-22.9-1.4-34-4.2l-88-22c-15.3-3.8-31.3-3.8-46.6 0l-88 22c-11.1 2.8-22.5 4.2-34 4.2C84.9 480 64 459.1 64 433.3v-1.6c0-10.4 1.6-20.8 5.2-30.5zM421.8 282.7c-24.5-14-29.1-51.7-10.2-84.1s54-47.3 78.5-33.3s29.1 51.7 10.2 84.1s-54 47.3-78.5 33.3zM357.1 189.7c-32.3-10.6-46.9-53.9-32.6-96.8s52.1-69.1 84.4-58.5s46.9 53.9 32.6 96.8s-52.1 69.1-84.4 58.5z"/></svg>
         <span><strong>Por cada tarjeta o placa Taptumi que entregamos, donamos una porción de comida</strong> a perritos rescatados.</span>

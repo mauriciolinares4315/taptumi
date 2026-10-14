@@ -145,6 +145,8 @@ a { color: inherit; }
 }
 .share-toast.visible { opacity: 1; transform: translate(-50%, 0); }
 
+.icon-share { width: 30px; height: 30px; display: block;}
+
 /* Vidrio */
 .glass-card {
   background: var(--glass-bg);
@@ -170,7 +172,7 @@ a { color: inherit; }
 /* Botones */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  padding: 15px 20px; border-radius: var(--radius-pill); border: 1px solid var(--glass-border);
+  padding: 13px; border-radius: var(--radius-pill); border: 1px solid var(--glass-border);
   font-family: var(--font-body); font-size: 15px; font-weight: 600; text-decoration: none;
   cursor: pointer; transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
   background: var(--glass-bg-strong); color: var(--text-primary);
